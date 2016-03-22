@@ -27,7 +27,7 @@ function Engine(canvas) {
     this.sprites = [];
     
     /* Timing. */
-    this.time = Date.now();
+    this.before = Date.now();
 
     /* Engine monitor. */
     this.fpsLimit = 60;
@@ -58,14 +58,12 @@ function Engine(canvas) {
         });
         
         /* Style the canvas. */
-        this.context.font = "24px Arial";
+        this.context.font = "20px Verdana";
 
     }
     
     /* Load resources. */
     this.load = function() {
-        
-        
         
     }
     
@@ -73,7 +71,6 @@ function Engine(canvas) {
     this.update = function(delta) {
         
     }
-    
     
     /* Render the canvas. */
     this.render = function(delta) {
@@ -86,8 +83,8 @@ function Engine(canvas) {
      	if (this.fpsVisible) {
 			this.context.fillStyle = "black";
 			this.context.textAlign = "left";
-			this.context.baseLine = "top";
-			this.context.fillText(Math.round(1000 / delta), 10, 28);
+			this.context.textBaseline = "hanging";
+			this.context.fillText(Math.round(1000 / delta) + " fps", 10, 8);
 		}
         
     }
@@ -100,10 +97,10 @@ function Engine(canvas) {
     
         /* Record timing. */
         var now = Date.now();
-        var delta = now - this.time;
+        var delta = now - this.before;
         
 		/* Change the time. */
-		this.time = Date.now();
+		this.before = Date.now();
         
         /* Allow if past frame limit. */
         if (delta > this.fpsInterval) {
@@ -119,6 +116,8 @@ function Engine(canvas) {
     /* Start the engine. */
     this.start = function() {
         
+        /* Load, setup and go! */
+        this.load();
         this.setup();
         this.main();
         
