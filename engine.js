@@ -30,8 +30,8 @@ function Engine(canvas) {
     this.time = Date.now();
 
     /* Engine monitor. */
-    this.fpsLimit = 30;
-    this.fpsInterval = 1 / this.fpsLimit * 1000;
+    this.fpsLimit = 60;
+    this.fpsInterval = 1000 / this.fpsLimit;
         
     /* Set up the engine and its components. */
     this.setup = function() {
@@ -55,6 +55,9 @@ function Engine(canvas) {
         	delete keys[e.keyCode];
         
         });
+        
+        /* Style the canvas. */
+        this.context.font = "24px Arial";
 
     }
     
@@ -68,14 +71,13 @@ function Engine(canvas) {
     /* Update the engine and components. */
     this.update = function(delta) {
         
-        
-        
     }
     
     
     /* Render the canvas. */
     this.render = function(delta) {
     
+    	/* Clear the canvas. */
     	this.context.fillStyle = "white";
     	this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
      
@@ -83,7 +85,7 @@ function Engine(canvas) {
      	this.context.fillStyle = "black";
     	this.context.textAlign = "left";
     	this.context.baseLine = "top";
-    	this.context.fillText(1 / delta, 10, 10);
+    	this.context.fillText(Math.round(1000 / delta), 10, 28);
         
     }
     
@@ -102,18 +104,19 @@ function Engine(canvas) {
         	this.render(delta);
         	
         	/* Change the time. */
-        	this.time = Date.now();
+        	this.time = Date.now() - (delta % this.fpsInterval);
         
         }
         
         /* Request another frame. */
-        requestAnimationFrame(this.main.bind(this));
+		requestAnimationFrame(this.main.bind(this));
     
     }
     
     /* Start the engine. */
     this.start = function() {
         
+        this.setup();
         this.main();
         
     }
