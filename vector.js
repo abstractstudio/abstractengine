@@ -17,16 +17,16 @@ function Vector(x0, y0) {
 		this.y *= f;
 	}
 	
-	function len2() {
+	function lengthSqr() {
 		return this.x * this.x + this.y * this.y;
 	}
 	
-	function len() {
-		return Math.sqrt(len2());
+	function length() {
+		return Math.sqrt(lengthSqr());
 	}
 	
 	function normalize() {
-		scale(this.len());
+		scale(this.length());
 	}
 	
 	function dot(vec) {
