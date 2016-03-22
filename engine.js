@@ -32,6 +32,7 @@ function Engine(canvas) {
     /* Engine monitor. */
     this.fpsLimit = 60;
     this.fpsInterval = 1000 / this.fpsLimit;
+    this.fpsVisible = true;
         
     /* Set up the engine and its components. */
     this.setup = function() {
@@ -82,19 +83,27 @@ function Engine(canvas) {
     	this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
      
      	/* Draw frames per second. */
-     	this.context.fillStyle = "black";
-    	this.context.textAlign = "left";
-    	this.context.baseLine = "top";
-    	this.context.fillText(Math.round(1000 / delta), 10, 28);
+     	if (this.fpsVisible) {
+			this.context.fillStyle = "black";
+			this.context.textAlign = "left";
+			this.context.baseLine = "top";
+			this.context.fillText(Math.round(1000 / delta), 10, 28);
+		}
         
     }
     
     /* The main loop inner function of the engine. */
     this.main = function() {
         
+        /* Request another frame. */
+		requestAnimationFrame(this.main.bind(this));    
+    
         /* Record timing. */
         var now = Date.now();
         var delta = now - this.time;
+        
+		/* Change the time. */
+		this.time = Date.now();
         
         /* Allow if past frame limit. */
         if (delta > this.fpsInterval) {
@@ -102,14 +111,8 @@ function Engine(canvas) {
         	/* Update and render. */
         	this.update(delta);
         	this.render(delta);
-        	
-        	/* Change the time. */
-        	this.time = Date.now() - (delta % this.fpsInterval);
         
         }
-        
-        /* Request another frame. */
-		requestAnimationFrame(this.main.bind(this));
     
     }
     
