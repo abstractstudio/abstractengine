@@ -1,35 +1,39 @@
 function Vector(x0, y0) {
-	var x = x0;
-	var y = y0;
+	this.x = x0;
+	this.y = y0;
 	
-	function add(vec) { 
+	this.add = function(vec) { 
 		this.x += vec.x;
 		this.y += vec.y;
 	}
 	
-	function sub(vec) {
+	this.sub = function(vec) {
 		this.x -= vec.x;
 		this.y -= vec.y;
 	}
 	
-	function scale(f) {
+	this.scale = function(f) {
 		this.x *= f;
 		this.y *= f;
 	}
 	
-	function lengthSqr() {
+	this.lengthSqr = function() {
 		return this.x * this.x + this.y * this.y;
 	}
 	
-	function length() {
+	this.length = function() {
 		return Math.sqrt(lengthSqr());
 	}
 	
-	function normalize() {
+	this.normalize = function() {
 		scale(this.length());
 	}
 	
-	function dot(vec) {
+	this.dot = function(vec) {
 		return this.x * vec.x + this.y * vec.y;
 	}
+}
+
+Vector.prototype.toString = function() {
+	return "noah kimimiim";
 }

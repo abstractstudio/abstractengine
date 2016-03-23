@@ -1,32 +1,36 @@
 function Sprite(x, y) {
 	/** Position. */
-    Vector pos = new Vector(x, y);
+    this.pos = new Vector(x, y);
     
     /** Size. */
-    var width;
-    var height;
+    this.width;
+    this.height;
     
     /** Physics. */
-    Vector velocity = new Vector(0, 0);
-    Vector acceleration = new Vector(0, 0);
+    this.velocity = new Vector(0, 0);
+    this.acceleration = new Vector(0, 0);
     
     /** Moves sprite by the specified amount in each direction. */
-	function translate(dx, dy) {
+	this.translate = function(dx, dy) {
 		this.pos.x += dx;
 		this.pos.y += dy;
 	}
 	
+	this.bbox = function() {
+		return [this.pos.x, this.pos.y, this.width, this.height];
+	}
+	
 	/** Returns whether this sprite touches another one. */
-	function touches(sprite) {
+	this.touches = function(sprite) {
 		return !(this.pos.x + this.width < sprite.pos.x || this.pos.x > sprite.pos.x + sprite.width || this.pos.y + this.height < sprite.pos.y || this.pos.y > sprite.pos.y + sprite.height);
 	}
 	
 	/** Default update method. Moves the object based on acceleration and velocity. */
-	function update(delta) {
-		
+	this.update = function(delta) {
+		console.log(this.pos.toString());
 	}
 	
-	function render(context) {
+	this.render = function(context) {
 		
 	}
 }

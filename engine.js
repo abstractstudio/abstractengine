@@ -33,6 +33,9 @@ function Engine(canvas) {
     this.fpsLimit = 60;
     this.fpsInterval = 1000 / this.fpsLimit;
     this.fpsVisible = true;
+    
+    
+    this.sprite = new Sprite(3, 3);
         
     /* Set up the engine and its components. */
     this.setup = function() {
@@ -53,7 +56,7 @@ function Engine(canvas) {
         document.addEventListener("keyup", function(e) {
         
         	/* Remove the key from the object. */
-        	delete keys[e.keyCode];
+        	delete this.keys[e.keyCode];
         
         });
         
@@ -69,7 +72,7 @@ function Engine(canvas) {
     
     /* Update the engine and components. */
     this.update = function(delta) {
-        
+        this.sprite.update();
     }
     
     /* Render the canvas. */
