@@ -26,14 +26,14 @@ function Engine(canvas) {
     this.resources = {};
     this.sprites = [];
     
-    /* Timing. */
-    this.before = Date.now();
-
-    /* Engine monitor. */
-    this.fpsLimit = 60;
-    this.fpsInterval = 1000 / this.fpsLimit;
-    this.fpsVisible = true;
-    
+    /* Engine loops. */
+    this.showFPS = true;
+    this.updateLimit = 60;
+    this.updateInterval = 1000 / this.updateLimit;
+    this.updateTime = 0;
+    this.renderLimit = 30;
+    this.renderInterval = 1000 / this.renderLimit;
+    this.renderTime = 0;
     
     this.sprite = new Sprite(3, 3);
         
@@ -77,52 +77,58 @@ function Engine(canvas) {
     
     /* Render the canvas. */
     this.render = function(delta) {
-    
+    	
     	/* Clear the canvas. */
     	this.context.fillStyle = "white";
     	this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
      
      	/* Draw frames per second. */
-     	if (this.fpsVisible) {
+     	if (this.showFPS) {
 			this.context.fillStyle = "black";
 			this.context.textAlign = "left";
 			this.context.textBaseline = "hanging";
 			this.context.fillText(Math.round(1000 / delta) + " fps", 10, 8);
 		}
-        
+		        
     }
     
-    /* The main loop inner function of the engine. */
-    this.main = function() {
-        
-        /* Request another frame. */
-		requestAnimationFrame(this.main.bind(this));    
-    
-        /* Record timing. */
-        var now = Date.now();
-        var delta = now - this.before;
-        
-		/* Change the time. */
-		this.before = Date.now();
-        
-        /* Allow if past frame limit. */
-        if (delta > this.fpsInterval) {
-        
-        	/* Update and render. */
-        	this.update(delta);
-        	this.render(delta);
-        
-        }
-    
+    /* Call the update hook. */
+    this._update = function() {
+    	
+    	/* Get the delta. */
+    	var delta = Date.now() - this.updateTime;
+    	this.updateTime = Date.now();
+    	
+    	/* Call the function. */
+    	this.update(delta);
+    	
     }
     
+    /* Call the render hook. */
+    this._render = function() {
+        
+    	/* Request another animation frame. */
+    	requestAnimationFrame(this._render.bind(this));
+    
+    	/* Get the delta. */
+    	var delta = Date.now() - this.renderTime;
+    	
+    	/* Call the function. */
+    	if (delta > this.renderInterval) {
+    		this.render(delta);
+    	   	this.renderTime = Date.now();
+		}
+		
+	}
+	
     /* Start the engine. */
     this.start = function() {
         
         /* Load, setup and go! */
         this.load();
         this.setup();
-        this.main();
+        setInterval(this._update.bind(this), this.updateInterval);
+        this._render();
         
     }
     

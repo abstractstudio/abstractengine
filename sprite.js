@@ -27,7 +27,7 @@ function Sprite(x, y) {
 	
 	/** Default update method. Moves the object based on acceleration and velocity. */
 	this.update = function(delta) {
-		console.log(this.pos.toString());
+		//console.log(this.pos.toString());
 	}
 	
 	this.render = function(context) {
