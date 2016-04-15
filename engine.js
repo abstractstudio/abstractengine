@@ -41,20 +41,20 @@ function Engine(canvas) {
         /* Keydown listener. */
         document.addEventListener("keydown", function(e) {
         
-        	/* If the key is not in the list, set it to be down, otherwise pressed. */
-        	if (this.keys[e.keyCode] == KEY_PRESSED) this.keys[e.keyCode] = KEY_DOWN;
-        	else this.keys[e.keyCode] = KEY_PRESSED;
-        	
-        	/* Prevent default actions. */
-        	if (PREVENT_DEFAULT.indexOf(e.keyCode) > -1) e.preventDefault();
-        	
+            /* If the key is not in the list, set it to be down, otherwise pressed. */
+            if (this.keys[e.keyCode] == KEY_PRESSED) this.keys[e.keyCode] = KEY_DOWN;
+            else this.keys[e.keyCode] = KEY_PRESSED;
+            
+            /* Prevent default actions. */
+            if (PREVENT_DEFAULT.indexOf(e.keyCode) > -1) e.preventDefault();
+            
         });
         
         /* Keyup listener. */
         document.addEventListener("keyup", function(e) {
         
-        	/* Remove the key from the object. */
-        	delete this.keys[e.keyCode];
+            /* Remove the key from the object. */
+            delete this.keys[e.keyCode];
         
         });
         
@@ -75,50 +75,50 @@ function Engine(canvas) {
     
     /* Render the canvas. */
     this.render = function(delta) {
-    	
-    	/* Clear the canvas. */
-    	this.context.fillStyle = "white";
-    	this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        
+        /* Clear the canvas. */
+        this.context.fillStyle = "white";
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
      
-     	/* Draw frames per second. */
-     	if (this.showFPS) {
-			this.context.fillStyle = "black";
-			this.context.textAlign = "left";
-			this.context.textBaseline = "hanging";
-			this.context.fillText(Math.round(1000 / delta) + " fps", 10, 8);
-		}
-		        
+        /* Draw frames per second. */
+        if (this.showFPS) {
+            this.context.fillStyle = "black";
+            this.context.textAlign = "left";
+            this.context.textBaseline = "hanging";
+            this.context.fillText(Math.round(1000 / delta) + " fps", 10, 8);
+        }
+                
     }
     
     /* Call the update hook. */
     this._update = function() {
-    	
-    	/* Get the delta. */
-    	var delta = Date.now() - this.updateTime;
-    	this.updateTime = Date.now();
-    	
-    	/* Call the function. */
-    	this.update(delta);
-    	
+        
+        /* Get the delta. */
+        var delta = Date.now() - this.updateTime;
+        this.updateTime = Date.now();
+        
+        /* Call the function. */
+        this.update(delta);
+        
     }
     
     /* Call the render hook. */
     this._render = function() {
         
-    	/* Request another animation frame. */
-    	requestAnimationFrame(this._render.bind(this));
+        /* Request another animation frame. */
+        requestAnimationFrame(this._render.bind(this));
     
-    	/* Get the delta. */
-    	var delta = Date.now() - this.renderTime;
-    	
-    	/* Call the function. */
-    	if (delta > this.renderInterval) {
-    		this.render(delta);
-    	   	this.renderTime = Date.now();
-		}
-		
-	}
-	
+        /* Get the delta. */
+        var delta = Date.now() - this.renderTime;
+        
+        /* Call the function. */
+        if (delta > this.renderInterval) {
+            this.render(delta);
+            this.renderTime = Date.now();
+        }
+        
+    }
+    
     /* Start the engine. */
     this.start = function() {
         
