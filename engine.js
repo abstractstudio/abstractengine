@@ -12,6 +12,9 @@ var KEY_DOWN = 2;
 /* Prevent default actions. By default, stops the arrow keys from moving window. */
 var PREVENT_DEFAULT = [37, 39, 38, 40]
 
+/* Example resource map. */
+// var LOAD = {"name": "path/to/resource"};
+
 /* The main engine class. */
 function Engine(canvas) {
     
@@ -64,7 +67,22 @@ function Engine(canvas) {
     }
     
     /* Load resources. */
-    this.load = function() {
+    this.load = function(map) {
+        
+        /* Load each resource. */
+        for (var name in map) {
+        
+        	/* Set the value in the resource map. */
+        	this.resources[key] = false;
+        	
+        	/* Create the image. */
+        	var image = new Image();
+        	image.name = name;
+        	image.engine = this;
+        	image.onload = function() { this.engine.resources[this.name] = this; }
+			image.src = map[name];
+			
+        }
         
     }
     
