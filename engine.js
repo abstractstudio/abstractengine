@@ -26,6 +26,7 @@ function Engine(canvas) {
     this.keys = {};
     
     /* Resources and sprites. */
+    this.loaded = false;
     this.resources = {};
     this.sprites = [];
     
@@ -79,7 +80,13 @@ function Engine(canvas) {
         	var image = new Image();
         	image.name = name;
         	image.engine = this;
-        	image.onload = function() { this.engine.resources[this.name] = this; }
+        	image.onload = function() { 
+        		this.engine.resources[this.name] = this; 
+        		for (var name in this.engine.resources) if (this.engine.resources === false) return;
+        		this.engine.loaded = true;
+        	}
+        	
+        	/* Set image source. */
 			image.src = map[name];
 			
         }
