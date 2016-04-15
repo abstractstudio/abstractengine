@@ -27,16 +27,14 @@ function Engine(canvas) {
     this.sprites = [];
     
     /* Engine loops. */
-    this.showFPS = true;
+    this.showFPS = false;
     this.updateLimit = 60;
     this.updateInterval = 1000 / this.updateLimit;
     this.updateTime = 0;
-    this.renderLimit = 30;
+    this.renderLimit = 100;
     this.renderInterval = 1000 / this.renderLimit;
     this.renderTime = 0;
-    
-    this.sprite = new Sprite(3, 3);
-        
+            
     /* Set up the engine and its components. */
     this.setup = function() {
         
@@ -72,7 +70,7 @@ function Engine(canvas) {
     
     /* Update the engine and components. */
     this.update = function(delta) {
-        this.sprite.update();
+
     }
     
     /* Render the canvas. */
