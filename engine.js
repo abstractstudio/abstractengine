@@ -63,7 +63,6 @@ function Engine(canvas) {
         
         /* Style the canvas. */
         this.context.font = "20px Verdana";
-
     }
     
     /* Load resources. */

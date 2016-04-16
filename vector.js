@@ -19,16 +19,16 @@ function Vector(x, y) {
         this.y *= f;
     }
     
-    this.lengthSquare = function() {
+    this.lenSqr = function() {
         return this.x * this.x + this.y * this.y;
     }
     
-    this.length = function() {
-        return Math.sqrt(lengthSqr());
+    this.len = function() {
+        return Math.sqrt(this.lenSqr());
     }
     
     this.normalize = function() {
-        scale(this.length());
+        this.scale(this.len());
     }
     
     this.dot = function(vec) {

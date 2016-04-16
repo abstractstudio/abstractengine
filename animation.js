@@ -1,5 +1,5 @@
 /* An animation for a sprite. */
-function Animation(frames = []) {
+function Animation(frames) {
     /** The name of this animation (for reference). */
     this.name = "";
     /** Whether the aimation is playing. */
@@ -8,7 +8,7 @@ function Animation(frames = []) {
     this.loop = true;
     
     /** The order of frames in this animation, specifed by index of the image in the spritesheet. */
-	this.frameIndices = frames;
+	this.frameIndices = frames || [];
 	/** The number of seconds that each frame lasts */
 	this.speed = 0.25;
 	
