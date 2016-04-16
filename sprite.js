@@ -12,18 +12,18 @@ function Sprite(x, y) {
     this.image;
     
     /* Animations. */
-    this.animation = [];
-    this.currAnim = -1;
+    this.animations = [];
+    this.currentAnimation = -1;
     this.numRows;
     this.numColumns;
     
     /** Adds an animation. */
     this.addAnimation = function(anim) {
-        this.animation.push(anim);
+        this.animations.push(anim);
     }
     
     /** Sets the spritesheet properties. */
-    this.setSpriteSheet = function(numR, numC) {
+    this.setSpriteSheetSize = function(numR, numC) {
         this.numRows = numR;
         this.numColumns = numC;
     }
@@ -50,26 +50,27 @@ function Sprite(x, y) {
       
     /* Default update method. Moves the object based on acceleration and velocity. */
     this.update = function(delta) {
-        if (this.animation != null) {
-            this.animation.update();
+        if (this.currentAnimation >= 0 && this.currentAnimation < this.animations.length) {
+            this.animations[this.currentAnimation].update();
         }
     }
     
     /* Render the sprite. */
     this.render = function(context) {
-        if (this.currAnim == -1) { // There's an animation
-            var frame = this.animation.getCurrentFrame();
+        if (this.currentAnimation >= 0 && this.currentAnimation < this.animations.length) { // There's an animation
+            var frame = this.animations[this.currentAnimation].getCurrentFrame();
+            console.log(frame + " " + this.animations[this.currentAnimation].frameIndex);
             
             // Get the subimage information
             var subWidth = this.image.width / this.numColumns;
             var subHeight = this.image.height / this.numRows;
             var subX = (frame % this.numColumns) * subWidth;
-            var subY = (frame % this.numRows) * subHeight;
+            var subY = (frame / this.numRows) * subHeight;
             
             // Draw the subimage
             context.drawImage(this.image, subX, subY, subWidth, subHeight, 
                 this.position.x, this.position.y, this.width, this.height);
-        } else { // No animation
+        } else if (this.image != null) { // Image but no animation
            context.drawImage(this.image, 0, 0, this.image.width, this.image.height, 
         		this.position.x, this.position.y, this.width, this.height);
         }

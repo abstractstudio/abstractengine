@@ -14,6 +14,7 @@ var PREVENT_DEFAULT = [37, 39, 38, 40]
 
 /* Example resource map. */
 // var LOAD = {"name": "path/to/resource"};
+var LOAD = {"explosion": "explosion.png"};
 
 /* The main engine class. */
 function Engine(canvas) {
@@ -64,6 +65,20 @@ function Engine(canvas) {
         
         /* Style the canvas. */
         this.context.font = "20px Verdana";
+        
+        /* Load images. */
+        this.load(LOAD);
+       // while (!this.loaded) ;
+        
+        var sprite = new Sprite(100, 100);
+        sprite.image = this.resources["explosion"];
+        sprite.setSpriteSheetSize(5, 5);
+        var anim = [];
+        for (var i = 0; i < 25; i++) anim.push(i);
+        sprite.addAnimation(new Animation("Explosion", anim));
+        sprite.currentAnimation = 0;
+        
+        this.sprites.push(sprite);
     }
     
     /* Load resources. */
@@ -73,7 +88,7 @@ function Engine(canvas) {
         for (var name in map) {
         
         	/* Set the value in the resource map. */
-        	this.resources[key] = false;
+        	this.resources[name] = false;
         	
         	/* Create the image. */
         	var image = new Image();
@@ -94,7 +109,10 @@ function Engine(canvas) {
     
     /* Update the engine and components. */
     this.update = function(delta) {
-
+        /* Update the sprites. */
+        for (var i = 0; i < this.sprites.length; i++) {
+            this.sprites[i].update(delta);
+        }
     }
     
     /* Render the canvas. */
@@ -111,7 +129,15 @@ function Engine(canvas) {
             this.context.textBaseline = "hanging";
             this.context.fillText(Math.round(1000 / delta) + " fps", 10, 8);
         }
-                
+        
+        /* Draw the sprites. */
+        if (!this.loaded) {
+            console.log("Not loaded yet");
+            return;
+        }
+        for (var i = 0; i < this.sprites.length; i++) {
+            this.sprites[i].render(this.context);
+        }
     }
     
     /* Call the update hook. */

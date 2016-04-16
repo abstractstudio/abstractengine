@@ -1,7 +1,7 @@
 /* An animation for a sprite. */
-function Animation(frames) {
+function Animation(n, frames) {
     /** The name of this animation (for reference). */
-    this.name = "";
+    this.name = n || "";
     /** Whether the aimation is playing. */
     this.playing = false;
     /** Whether the animation loops back and replays when it finishes. */
@@ -24,7 +24,7 @@ function Animation(frames) {
 	this.update = function() {
 	    if (this.playing) {
     	    var now = Date.now();
-    	    if (now - this.frameStartTime >= this.speed) { // if the animation should be advanced
+    	    if (now - this.frameStartTime >= this.speed * 1000) { // if the animation should be advanced
     	        this.frameStartTime = now;
     	        this.frameIndex++;
     	        
