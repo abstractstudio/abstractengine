@@ -29,7 +29,7 @@ function Engine(canvas) {
     /* Resources and sprites. */
     this.loaded = false;
     this.resources = {};
-    this.sprites = [];
+    this.sprites = {};
     
     /* Engine loops. */
     this.showFPS = false;
@@ -42,7 +42,6 @@ function Engine(canvas) {
             
     /* Set up the engine and its components. */
     this.setup = function() {
-        
         /* Keydown listener. */
         document.addEventListener("keydown", function(e) {
         
@@ -68,17 +67,20 @@ function Engine(canvas) {
         
         /* Load images. */
         this.load(LOAD);
-       // while (!this.loaded) ;
         
-        var sprite = new Sprite(100, 100);
-        sprite.image = this.resources["explosion"];
-        sprite.setSpriteSheetSize(5, 5);
-        var anim = [];
-        for (var i = 0; i < 25; i++) anim.push(i);
-        sprite.addAnimation(new Animation("Explosion", anim));
-        sprite.currentAnimation = 0;
-        
-        this.sprites.push(sprite);
+		// Load the test explosion animation
+        var explosion = new Sprite(200, 200, 200, 200);
+        explosion.spriteImage = this.resources["explosion"];
+        explosion.setSpriteSheetSize(5, 5);
+		
+        var frames = [];
+        for (var i = 0; i < 25; i++) frames.push(i);
+		var anim = new Animation("Explosion", frames);
+		anim.playing = true;
+        explosion.addAnimation(anim);
+        explosion.currentAnimation = "Explosion";
+		
+        this.sprites["explosion"] = explosion;
     }
     
     /* Load resources. */
@@ -96,7 +98,8 @@ function Engine(canvas) {
         	image.engine = this;
         	image.onload = function() { 
         		this.engine.resources[this.name] = this; 
-        		for (var name in this.engine.resources) if (this.engine.resources === false) return;
+				if (this.name in this.engine.sprites) this.engine.sprites[this.name].spriteImage = this;
+        		for (var name in this.engine.resources) if (this.engine.resources[name] === false) return;
         		this.engine.loaded = true;
         	}
         	
@@ -110,8 +113,8 @@ function Engine(canvas) {
     /* Update the engine and components. */
     this.update = function(delta) {
         /* Update the sprites. */
-        for (var i = 0; i < this.sprites.length; i++) {
-            this.sprites[i].update(delta);
+        for (var name in this.sprites) {
+            this.sprites[name].update(delta);
         }
     }
     
@@ -129,20 +132,15 @@ function Engine(canvas) {
             this.context.textBaseline = "hanging";
             this.context.fillText(Math.round(1000 / delta) + " fps", 10, 8);
         }
-        
+		
         /* Draw the sprites. */
-        if (!this.loaded) {
-            console.log("Not loaded yet");
-            return;
-        }
-        for (var i = 0; i < this.sprites.length; i++) {
-            this.sprites[i].render(this.context);
+        for (var name in this.sprites) {
+            this.sprites[name].render(this.context);
         }
     }
     
     /* Call the update hook. */
     this._update = function() {
-        
         /* Get the delta. */
         var delta = Date.now() - this.updateTime;
         this.updateTime = Date.now();

@@ -10,7 +10,7 @@ function Animation(n, frames) {
     /** The order of frames in this animation, specifed by index of the image in the spritesheet. */
 	this.frameIndices = frames || [];
 	/** The number of seconds that each frame lasts */
-	this.speed = 0.25;
+	this.speed = 0.02;
 	
 	/** The current animation frame. */
 	this.frameIndex = 0;
