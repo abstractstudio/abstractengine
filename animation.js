@@ -17,10 +17,19 @@ function Animation(n, frames) {
 	/** The time that the current frame started. */
 	this.frameStartTime = 0;
 	
+	/** Starts this animation from the beginning. */
+	this.play = function() {
+		this.frameIndex = 0;
+		this.frameStartTime = Date.now();
+		this.playing = true;
+	}
+	
+	/** Gets the index of the current animation frame in the spritesheet. */
 	this.getCurrentFrame = function() {
 	    return this.frameIndices[this.frameIndex];
 	}
 	
+	/** Moves the animation forward. */
 	this.update = function() {
 	    if (this.playing) {
     	    var now = Date.now();

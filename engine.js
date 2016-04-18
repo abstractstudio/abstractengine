@@ -9,12 +9,16 @@ requestAnimationFrame = (window.requestAnimationFrame ||
 var KEY_PRESSED = 1;
 var KEY_DOWN = 2;
 
+/* Input. */
+var keys = {};
+
 /* Prevent default actions. By default, stops the arrow keys from moving window. */
 var PREVENT_DEFAULT = [37, 39, 38, 40]
 
 /* Example resource map. */
 // var LOAD = {"name": "path/to/resource"};
-var LOAD = {"explosion": "explosion.png"};
+var IMAGE_PATHS = {"explosion": "explosion.png"};
+var SOUNDS_PATHS = {"explosion": "explosion.wav"};
 
 /* The main engine class. */
 function Engine(canvas) {
@@ -23,12 +27,12 @@ function Engine(canvas) {
     this.canvas = canvas;
     this.context = canvas.getContext("2d");
     
-    /* Input. */
-    this.keys = {};
-    
     /* Resources and sprites. */
-    this.loaded = false;
-    this.resources = {};
+    this.imagesLoaded = false;
+    this.images = {};
+	this.soundsLoaded = false;
+	this.sounds = {};
+	
     this.sprites = {};
     
     /* Engine loops. */
@@ -46,8 +50,8 @@ function Engine(canvas) {
         document.addEventListener("keydown", function(e) {
         
             /* If the key is not in the list, set it to be down, otherwise pressed. */
-            if (this.keys[e.keyCode] == KEY_PRESSED) this.keys[e.keyCode] = KEY_DOWN;
-            else this.keys[e.keyCode] = KEY_PRESSED;
+            if (keys[e.keyCode] == KEY_PRESSED) keys[e.keyCode] = KEY_DOWN;
+            else keys[e.keyCode] = KEY_PRESSED;
             
             /* Prevent default actions. */
             if (PREVENT_DEFAULT.indexOf(e.keyCode) > -1) e.preventDefault();
@@ -58,49 +62,48 @@ function Engine(canvas) {
         document.addEventListener("keyup", function(e) {
         
             /* Remove the key from the object. */
-            delete this.keys[e.keyCode];
+            delete keys[e.keyCode];
         
         });
         
         /* Style the canvas. */
         this.context.font = "20px Verdana";
         
-        /* Load images. */
-        this.load(LOAD);
+        /* Load resources. */
+        this.loadImages(IMAGE_PATHS);
+		this.loadSounds(SOUNDS_PATHS);
         
 		// Load the test explosion animation
-        var explosion = new Sprite(200, 200, 200, 200);
-        explosion.spriteImage = this.resources["explosion"];
+        var explosion = new Sprite(100, 0, 600, 600);
+        explosion.spriteImage = this.images["explosion"];
         explosion.setSpriteSheetSize(5, 5);
 		
         var frames = [];
         for (var i = 0; i < 25; i++) frames.push(i);
 		var anim = new Animation("Explosion", frames);
-		anim.playing = true;
         explosion.addAnimation(anim);
         explosion.currentAnimation = "Explosion";
+		explosion.getCurrentAnimation().loop = false;
 		
         this.sprites["explosion"] = explosion;
     }
     
-    /* Load resources. */
-    this.load = function(map) {
-        
+    /* Load images. */
+    this.loadImages = function(map) {
         /* Load each resource. */
         for (var name in map) {
-        
         	/* Set the value in the resource map. */
-        	this.resources[name] = false;
+        	this.images[name] = false;
         	
         	/* Create the image. */
         	var image = new Image();
         	image.name = name;
         	image.engine = this;
         	image.onload = function() { 
-        		this.engine.resources[this.name] = this; 
+        		this.engine.images[this.name] = this; 
 				if (this.name in this.engine.sprites) this.engine.sprites[this.name].spriteImage = this;
-        		for (var name in this.engine.resources) if (this.engine.resources[name] === false) return;
-        		this.engine.loaded = true;
+        		for (var name in this.engine.images) if (this.engine.images[name] === false) return;
+        		this.engine.imagesLoaded = true;
         	}
         	
         	/* Set image source. */
@@ -109,6 +112,29 @@ function Engine(canvas) {
         }
         
     }
+	
+	/* Load sounds. */
+	this.loadSounds = function(map) {
+		for (var name in map) {
+        	/* Set the value in the resource map. */
+        	this.sounds[name] = false;
+        	
+        	/* Create the sound. */
+        	var sound = new Audio();
+			//sound.loop = false;
+			sound.name = name;
+        	sound.engine = this;
+        	sound.canplaythrough = function() { 
+        		this.engine.sounds[this.name] = this;
+        		for (var name in this.engine.sounds) if (this.engine.sounds[name] === false) return;
+        		this.engine.soundsLoaded = true;
+        	}
+        	
+        	/* Set sound source. */
+			sound.src = map[name];
+			this.sounds[name] = sound;
+        }
+	}
     
     /* Update the engine and components. */
     this.update = function(delta) {
@@ -116,6 +142,12 @@ function Engine(canvas) {
         for (var name in this.sprites) {
             this.sprites[name].update(delta);
         }
+		
+		/** Play the explosion animation and sound. */
+		if (this.sounds["explosion"].paused) {
+			this.sprites["explosion"].getCurrentAnimation().play();
+			this.sounds["explosion"].play();
+		}
     }
     
     /* Render the canvas. */
@@ -171,7 +203,6 @@ function Engine(canvas) {
     this.start = function() {
         
         /* Load, setup and go! */
-        this.load();
         this.setup();
         setInterval(this._update.bind(this), this.updateInterval);
         this._render();

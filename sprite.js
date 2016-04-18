@@ -17,12 +17,17 @@ function Sprite(x, y, w, h) {
     this.numRows;
     this.numColumns;
     
-    /** Adds an animation. */
+    /* Adds an animation. */
     this.addAnimation = function(anim) {
         this.animations[anim.name] = anim;
     }
+	
+	/* Gets the current animation. */
+	this.getCurrentAnimation = function() {
+		return this.animations[this.currentAnimation];
+	}
     
-    /** Sets the spritesheet properties. */
+    /* Sets the spritesheet properties. */
     this.setSpriteSheetSize = function(numR, numC) {
         this.numRows = numR;
         this.numColumns = numC;
@@ -71,7 +76,6 @@ function Sprite(x, y, w, h) {
 				context.drawImage(this.spriteImage, subX, subY, subWidth, subHeight, this.position.x, this.position.y, this.width, this.height);
 			} else { // Image but no animation
 				context.drawImage(this.spriteImage, 0, 0, this.spriteImage.width, this.spriteImage.height, this.position.x, this.position.y, this.width, this.height);
-				console.log(this.spriteImage.width + " " + this.spriteImage.height + " " + this.position.x + " " + this.position.y + " " + this.width + " " + this.height);
 			}
 		}
     }
