@@ -17,8 +17,6 @@ var PREVENT_DEFAULT = [37, 39, 38, 40]
 
 /* Example resource map. */
 // var LOAD = {"name": "path/to/resource"};
-var IMAGE_PATHS = {"explosion": "explosion.png"};
-var SOUNDS_PATHS = {"explosion": "explosion.wav"};
 
 /* The main engine class. */
 function Engine(canvas) {
@@ -68,24 +66,6 @@ function Engine(canvas) {
         
         /* Style the canvas. */
         this.context.font = "20px Verdana";
-        
-        /* Load resources. */
-        this.loadImages(IMAGE_PATHS);
-		this.loadSounds(SOUNDS_PATHS);
-        
-		// Load the test explosion animation
-        var explosion = new Sprite(100, 0, 600, 600);
-        explosion.spriteImage = this.images["explosion"];
-        explosion.setSpriteSheetSize(5, 5);
-		
-        var frames = [];
-        for (var i = 0; i < 25; i++) frames.push(i);
-		var anim = new Animation("Explosion", frames);
-        explosion.addAnimation(anim);
-        explosion.currentAnimation = "Explosion";
-		explosion.getCurrentAnimation().loop = false;
-		
-        this.sprites["explosion"] = explosion;
     }
     
     /* Load images. */
@@ -142,12 +122,6 @@ function Engine(canvas) {
         for (var name in this.sprites) {
             this.sprites[name].update(delta);
         }
-		
-		/** Play the explosion animation and sound. */
-		if (this.sounds["explosion"].paused) {
-			this.sprites["explosion"].getCurrentAnimation().play();
-			this.sounds["explosion"].play();
-		}
     }
     
     /* Render the canvas. */
