@@ -1,0 +1,40 @@
+/** Require a set of javascript files. */
+function require(files, callback) {
+    
+    /* Set up ready hooks. */
+    var ready = [];
+    var and = function(a, b) { return a && b; };
+    var check = function() { if (ready.indexOf(null) == -1) callback(ready.reduce(and)); };
+    
+    /* Iterate through files. */
+    for (var i = 0; i < files.length; i++) {
+        
+        /* Create script and custom hook. */
+        var script = document.createElement("script");
+        script.index = i;
+        script.type = "text/javascript";
+        script.src = files[i];
+
+        /* Create event callbacks. */
+        var hook = function() { ready[this.index] = true; check(); };
+        script.onreadystatechange = hook;
+        script.onload = hook;
+        ready[i] = null;
+        
+        /* Add the script. */
+        try { document.head.appendChild(script); check(); }
+        catch (e) { ready[i] = false; }
+        
+    }
+    
+}
+
+/* Check start function. */
+if (typeof start === "function") {
+    
+    /* Load the engine. */
+    var dependencies = ["vector.js", "animation.js", "sprite.js", "engine.js"];
+    require(dependencies, start);
+
+/* Otherwise. */
+} else { console.error("No start function is defined."); }
