@@ -35,6 +35,7 @@ if (typeof start === "function") {
     /* Load the engine. */
     var dependencies = ["vector.js", "animation.js", "sprite.js", "engine.js"];
     require(dependencies, start);
+    console.log("Loaded dependencies.");
 
 /* Otherwise. */
 } else { console.error("No start function is defined."); }

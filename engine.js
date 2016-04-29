@@ -34,7 +34,7 @@ function Engine(canvas) {
     this.sprites = {};
     
     /* Engine loops. */
-    this.showFPS = false;
+    this.showFPS = true;
     this.updateLimit = 60;
     this.updateInterval = 1000 / this.updateLimit;
     this.updateTime = 0;

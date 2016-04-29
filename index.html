@@ -5,10 +5,6 @@
     		body { text-align: center; margin-top: 4em; background-color: #DDD; }
     		canvas { border-radius: 1em; }
     	</style>
-    	<script type="text/javascript" src="vector.js"></script>
-    	<script type="text/javascript" src="animation.js"></script>
-    	<script type="text/javascript" src="sprite.js"></script>
-    	<script type="text/javascript" src="engine.js"></script>
     	<script type="text/javascript">
     		function start() {
 				var canvas = document.getElementById("canvas");
@@ -16,6 +12,7 @@
 				engine.start();
 			}
     	</script>
+    	<script type="text/javascript" src="setup.js"></script>
 	</head>
 	<body onload="javascript: start();" style="text-align: center; margin-top: 4em;">
 		<canvas width=800 height=600 id="canvas">HTML5 unavailable</canvas> 
