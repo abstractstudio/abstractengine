@@ -1,8 +1,10 @@
 /* Main sprite. */
 function Sprite(x, y, w, h) {
 
-    /* Position. */
+    /* Position (center). */
     this.position = new Vector(x || 0, y || 0);
+    /* Rotation about the center. */
+    this.rotation = 0;
     
     /* Size. */
     this.width = w || 0;
@@ -41,7 +43,10 @@ function Sprite(x, y, w, h) {
     
     /* Bounding box. */
     this.bbox = function() {
-        return [this.position.x, this.position.y, this.width, this.height];
+        var leftX = this.position.x - this.width/2;
+        var topY = this.position.y - this.height/2;
+        var box = [leftX * Math.cos(this.rotation) - topY * Math.sin(this.rotation), 
+                    leftX * Math.sin(this.rotation) + topY * Math.cos(this.rotation), this.width, this.height];
     }
     
     /* Returns whether this sprite touches another one. */
