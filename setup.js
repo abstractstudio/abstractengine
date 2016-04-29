@@ -6,8 +6,14 @@ function require(files, callback) {
     
     /* Set up ready hooks. */
     var ready = [];
+    var done = false;
     var and = function(a, b) { return a && b; };
-    var check = function() { if (ready.indexOf(null) == -1) callback(ready.reduce(and)); };
+    var check = function() { 
+        if (ready.indexOf(null) == -1 && !done) {
+            callback(ready.reduce(and)); 
+            done = true;
+        }
+    };
     
     /* Iterate through files. */
     for (var i = 0; i < files.length; i++) {
