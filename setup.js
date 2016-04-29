@@ -1,3 +1,6 @@
+/** Abstract Engine dependencies. */
+var dependencies = ["vector.js", "animation.js", "sprite.js", "engine.js"];
+
 /** Require a set of javascript files. */
 function require(files, callback) {
     
@@ -33,7 +36,8 @@ function require(files, callback) {
 if (typeof start === "function") {
     
     /* Load the engine. */
-    var dependencies = ["vector.js", "animation.js", "sprite.js", "engine.js"];
+    if (typeof ENGINE !== "string") var ENGINE = "";
+    dependencies = dependencies.map(function(file) { return ENGINE+file; });
     require(dependencies, start);
     console.log("Loaded dependencies.");
 
