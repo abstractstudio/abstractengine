@@ -9,6 +9,7 @@ function require(files, callback) {
     var and = function(a, b) { return a && b; };
     var check = function() { if (ready.indexOf(null) == -1) callback(ready.reduce(and)); };
     
+    
     /* Iterate through files. */
     for (var i = 0; i < files.length; i++) {
         
