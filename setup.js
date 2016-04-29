@@ -6,12 +6,13 @@ function require(files, callback) {
     
     /* Set up ready hooks. */
     var ready = [];
-    var done = false;
+    var finished = false;
     var and = function(a, b) { return a && b; };
-    var check = function() { 
-        if (ready.indexOf(null) == -1 && !done) {
-            callback(ready.reduce(and)); 
-            done = true;
+    var check = function() {
+        if (ready.indexOf(null) == -1 && !finished) {
+            callback(ready.reduce(and));
+            finished = true;
+            console.log("Made callback from require");
         }
     };
     
@@ -32,7 +33,7 @@ function require(files, callback) {
         ready[i] = null;
         
         /* Add the script. */
-        try { document.head.appendChild(script); check(); }
+        try { document.head.appendChild(script); }
         catch (e) { ready[i] = false; }
         
     }
@@ -46,7 +47,7 @@ if (typeof start === "function") {
     if (typeof ENGINE !== "string") var ENGINE = "";
     dependencies = dependencies.map(function(file) { return ENGINE+file; });
     require(dependencies, start);
-    console.log("Loaded dependencies.");
+    console.log("Loaded dependencies");
 
 /* Otherwise. */
-} else { console.error("No start function is defined."); }
+} else { console.error("No start function is defined"); }

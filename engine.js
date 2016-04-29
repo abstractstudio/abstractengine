@@ -6,8 +6,11 @@ requestAnimationFrame = (window.requestAnimationFrame ||
                          window.oRequestAnimationFrame);
                          
 /* Key states. */
-var KEY_PRESSED = 1;
-var KEY_DOWN = 2;
+var KEY = {
+	PRESSED: 1, DOWN: 2,
+	W: 87, A: 65, S: 83, D: 68,
+	UP: 38, LEFT: 37, DOWN: 40, RIGHT: 39,
+};
 
 /* Input. */
 var keys = {};
@@ -23,7 +26,7 @@ function Engine(canvas) {
     
     /* Graphical components. */
     this.canvas = canvas;
-    this.context = canvas.getContext("2d");
+    if (canvas) this.context = canvas.getContext("2d");
     
     /* Resources and sprites. */
     this.imagesLoaded = false;
@@ -48,8 +51,8 @@ function Engine(canvas) {
         document.addEventListener("keydown", function(e) {
         
             /* If the key is not in the list, set it to be down, otherwise pressed. */
-            if (keys[e.keyCode] == KEY_PRESSED) keys[e.keyCode] = KEY_DOWN;
-            else keys[e.keyCode] = KEY_PRESSED;
+            if (keys[e.keyCode] == KEY.PRESSED) keys[e.keyCode] = KEY.DOWN;
+            else keys[e.keyCode] = KEY.PRESSED;
             
             /* Prevent default actions. */
             if (PREVENT_DEFAULT.indexOf(e.keyCode) > -1) e.preventDefault();
