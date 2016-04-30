@@ -75,7 +75,7 @@ function Engine(canvas) {
             mouse.x = event.clientX;
             mouse.y = event.clientY;
             
-        }
+        });
         
         /* Style the canvas. */
         this.context.font = "20px Verdana";
