@@ -1,10 +1,12 @@
 /* Main sprite. */
-function Sprite(x, y, w, h) {
+function Sprite(x, y, w, h, rx, ry) {
 
     /* Position (center). */
     this.position = new Vector(x || 0, y || 0);
+    
     /* Rotation about the center. */
     this.rotation = 0;
+    this.rposition = new Vector(rx || w/2 || 0, ry || h/2 || 0);
     
     /* Size. */
     this.width = w || 0;
@@ -68,6 +70,11 @@ function Sprite(x, y, w, h) {
     /* Render the sprite. */
     this.render = function(context) {
 		if (this.spriteImage != null) {
+            
+            context.translate(this.position.x+this.rposition.x, this.postition.y+this.position.y);
+            context.rotate(this.rotation);
+            context.translate(-this.position.x-this.rposition.x, -this.position.y-this.rposition.y);
+            
 			if (this.currentAnimation in this.animations) { // There's an animation
 				var f = this.animations[this.currentAnimation].getCurrentFrame();
 				
@@ -82,6 +89,8 @@ function Sprite(x, y, w, h) {
 			} else { // Image but no animation
 				context.drawImage(this.spriteImage, 0, 0, this.spriteImage.width, this.spriteImage.height, this.position.x, this.position.y, this.width, this.height);
 			}
+            
+            context.restore();
 		}
     }
 }
