@@ -31,10 +31,11 @@ function Animation(name, frames) {
 	
 	/** Gets the index of the current animation frame in the spritesheet. */
 	this.getCurrentFrame = function() {
+        console.log(this.frameIndices[this.frameIndex]);
 	    return this.frameIndices[this.frameIndex];
 	}
 	
-	/** Moves the animation forward. */
+	/** Moves the animation forward.d */
 	this.update = function() {
 	    if (this.playing) {
     	    var now = Date.now();
