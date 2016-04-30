@@ -14,6 +14,7 @@ var KEY = {
 
 /* Input. */
 var keys = {};
+var mouse = {};
 
 /* Prevent default actions. By default, stops the arrow keys from moving window. */
 var PREVENT_DEFAULT = [37, 39, 38, 40]
@@ -66,6 +67,15 @@ function Engine(canvas) {
             delete keys[e.keyCode];
         
         });
+        
+        /* Mouse position. */
+        document.addEventListener("mousemove", function(e) {
+            
+            /* Get the position */
+            mouse.x = event.clientX;
+            mouse.y = event.clientY;
+            
+        }
         
         /* Style the canvas. */
         this.context.font = "20px Verdana";
