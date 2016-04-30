@@ -84,7 +84,7 @@ function Sprite(x, y, w, h, rx, ry) {
 				var subWidth = this.spriteImage.width / this.numColumns;
 				var subHeight = this.spriteImage.height / this.numRows;
 				var subX = (f % this.numColumns) * subWidth;
-				var subY = ((f / this.numRows) || 0) * subHeight;
+				var subY = ((f / this.numColumns) | 0) * subHeight;
 				
 				// Draw the subimage
 				context.drawImage(this.spriteImage, subX, subY, subWidth, subHeight, 
