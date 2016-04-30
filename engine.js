@@ -10,6 +10,7 @@ var KEY = {
 	PRESSED: 1, DOWN: 2,
 	W: 87, A: 65, S: 83, D: 68,
 	UP: 38, LEFT: 37, DOWN: 40, RIGHT: 39,
+	ESCAPE: 27,
 };
 
 /* Input. */
@@ -38,7 +39,7 @@ function Engine(canvas) {
     this.sprites = {};
     
     /* Engine loops. */
-    this.showFPS = true;
+    this.showFPS = false;
     this.updateLimit = 60;
     this.updateInterval = 1000 / this.updateLimit;
     this.updateTime = 0;
@@ -50,10 +51,9 @@ function Engine(canvas) {
     this.setup = function() {
         /* Keydown listener. */
         document.addEventListener("keydown", function(e) {
-        
+			        
             /* If the key is not in the list, set it to be down, otherwise pressed. */
-            if (keys[e.keyCode] == KEY.PRESSED) keys[e.keyCode] = KEY.DOWN;
-            else keys[e.keyCode] = KEY.PRESSED;
+            if (keys[e.keyCode] == undefined) keys[e.keyCode] = KEY.PRESSED;
             
             /* Prevent default actions. */
             if (PREVENT_DEFAULT.indexOf(e.keyCode) > -1) e.preventDefault();
@@ -135,6 +135,10 @@ function Engine(canvas) {
         for (var name in this.sprites) {
             this.sprites[name].update(delta);
         }
+		
+		/* Change keys. */
+		for (var key in keys) if (keys[key] == KEY.PRESSED) keys[key] = KEY.DOWN;
+
     }
     
     /* Render the canvas. */
