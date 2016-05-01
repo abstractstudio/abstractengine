@@ -18,8 +18,11 @@ function Sheet(image, rows, columns) {
 }
 
 /* Main sprite. */
-function Sprite(x, y, w, h, cx, cy) {
+function Sprite(engine, x, y, w, h, cx, cy) {
 
+    /* Engine. */
+    this.engine = engine;
+    
     /* Position (center). */
     this.pos = new Vector(x || 0, y || 0);
     this.cpos = new Vector(cx || w/2 || 0, cy || h/2 || 0);
