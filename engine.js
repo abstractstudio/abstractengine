@@ -5,6 +5,7 @@ locate("requestAnimationFrame");
 var KEY = {PRESSED: 1, DOWN: 2, DEFAULT: [37, 39, 38, 40], 
            W: 87, A: 65, S: 83, D: 68, 
            UP: 38, LEFT: 37, DOWN: 40, RIGHT: 39, 
+           C: 67,
            ESCAPE: 27};
 
 /* The main engine class. */
@@ -81,12 +82,14 @@ function Engine(canvas) {
     }
     
     /* Render the canvas. */
-    this.render = function(delta) {
+    this.render = function(delta, clear) {
         
         /* Clear the canvas. */
-        this.context.fillStyle = "white";
-        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-     
+        if (clear !== false) {
+            this.context.fillStyle = "white";
+            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+        
         /* Draw frames per second. */
         if (this.showFPS) {
             var fps = this.renderTimes.map(function(x) { return 1000/x; }).reduce(function(a, b) { return a+b; }, 0) / this.renderTimes.length;
