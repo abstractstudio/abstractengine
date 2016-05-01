@@ -41,7 +41,7 @@ function Engine(canvas) {
         /* Keydown listener updates the keyboard. */
         document.addEventListener("keydown", function(e) {
             if (that.keyboard[e.keyCode] === undefined) that.keyboard[e.keyCode] = KEY.PRESSED;
-            if (KEY.DEFAULT.indexOf(e.keyCode) > -1) e.preventDefault();            
+            if (KEY.DEFAULT.indexOf(e.keyCode) > -1) e.preventDefault();  
         });
         
         /* Keyup listener. */
@@ -55,7 +55,7 @@ function Engine(canvas) {
             that.mouse.y = event.clientY;
         });
 
-        /* DEMO CODE: Load some nice jams. */
+        /* DEMO CODE: Load some nice jams. 
         var that = this;
         this.manager.queue("song", RESOURCE.AUDIO, "assets/aesthic.m4a");
         this.manager.load(function() { 
@@ -71,7 +71,9 @@ function Engine(canvas) {
     this.update = function(delta) {
         
         /* Update the sprites. */
-        for (var name in this.entities) if (this.entities[name].autoupdate) this.sprites[name].update(delta);
+        for (var name in this.entities) {
+            if (this.entities[name].autoupdate) this.entities[name].update(delta);
+        }
 		
 		/* Change keys from pressed to down. */
 		for (var key in this.keyboard) if (this.keyboard[key] == KEY.PRESSED) this.keyboard[key] = KEY.DOWN;
@@ -96,9 +98,10 @@ function Engine(canvas) {
         }
 		
         /* Draw the sprites. */
-        for (var name in this.sprites) {
-            this.sprites[name].render(this.context);
+        for (var name in this.entities) {
+            if (this.entities[name].autorender) this.entities[name].render(this.context);
         }
+        
     }
     
     /* Call the update hook. */
