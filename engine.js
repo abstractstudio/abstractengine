@@ -1,27 +1,11 @@
 /* Determine the graphics request call. */
-requestAnimationFrame = (window.requestAnimationFrame ||
-                         window.webkitRequestAnimationFrame ||
-                         window.msRequestAnimationFrame ||
-                         window.mozRequestAnimationFrame ||
-                         window.oRequestAnimationFrame);
+locate("requestAnimationFrame");
                          
 /* Key states. */
-var KEY = {
-	PRESSED: 1, DOWN: 2,
-	W: 87, A: 65, S: 83, D: 68,
-	UP: 38, LEFT: 37, DOWN: 40, RIGHT: 39,
-	ESCAPE: 27,
-};
-
-/* Input. */
-var keys = {};
-var mouse = {};
-
-/* Prevent default actions. By default, stops the arrow keys from moving window. */
-var PREVENT_DEFAULT = [37, 39, 38, 40]
-
-/* Example resource map. */
-// var LOAD = {"name": "path/to/resource"};
+var KEY = {PRESSED: 1, DOWN: 2, DEFAULT: [37, 39, 38, 40], 
+           W: 87, A: 65, S: 83, D: 68, 
+           UP: 38, LEFT: 37, DOWN: 40, RIGHT: 39, 
+           ESCAPE: 27};
 
 /* The main engine class. */
 function Engine(canvas) {
@@ -30,114 +14,67 @@ function Engine(canvas) {
     this.canvas = canvas;
     if (canvas) this.context = canvas.getContext("2d");
     
+    /* Input. */
+    this.keyboard = {};
+    this.mouse = {x: 0, y: 0};
+    
     /* Resources and sprites. */
-    this.imagesLoaded = false;
-    this.images = {};
-	this.soundsLoaded = false;
-	this.sounds = {};
-	
-    this.sprites = {};
+    this.manager = new Manager();
+    this.entities = {};
     
     /* Engine loops. */
-    this.showFPS = false;
+    this.showFPS = true;
     this.updateLimit = 60;
     this.updateInterval = 1000 / this.updateLimit;
     this.updateTime = 0;
     this.renderLimit = 100;
     this.renderInterval = 1000 / this.renderLimit;
     this.renderTime = 0;
+    this.renderTimes = new Array(50);
             
     /* Set up the engine and its components. */
     this.setup = function() {
-        /* Keydown listener. */
+        
+        /* Self reference. */
+        var that = this;
+        
+        /* Keydown listener updates the keyboard. */
         document.addEventListener("keydown", function(e) {
-			        
-            /* If the key is not in the list, set it to be down, otherwise pressed. */
-            if (keys[e.keyCode] == undefined) keys[e.keyCode] = KEY.PRESSED;
-            
-            /* Prevent default actions. */
-            if (PREVENT_DEFAULT.indexOf(e.keyCode) > -1) e.preventDefault();
-            
+            if (that.keyboard[e.keyCode] === undefined) that.keyboard[e.keyCode] = KEY.PRESSED;
+            if (KEY.DEFAULT.indexOf(e.keyCode) > -1) e.preventDefault();            
         });
         
         /* Keyup listener. */
         document.addEventListener("keyup", function(e) {
-        
-            /* Remove the key from the object. */
-            delete keys[e.keyCode];
-        
+            delete that.keyboard[e.keyCode];
         });
         
         /* Mouse position. */
         document.addEventListener("mousemove", function(e) {
-            
-            /* Get the position */
-            mouse.x = event.clientX;
-            mouse.y = event.clientY;
-            
+            that.mouse.x = event.clientX;
+            that.mouse.y = event.clientY;
         });
-        
-        /* Style the canvas. */
-        this.context.font = "20px Verdana";
-    }
-    
-    /* Load images. */
-    this.loadImages = function(map) {
-        /* Load each resource. */
-        for (var name in map) {
-        	/* Set the value in the resource map. */
-        	this.images[name] = false;
-        	
-        	/* Create the image. */
-        	var image = new Image();
-        	image.name = name;
-        	image.engine = this;
-        	image.onload = function() { 
-        		this.engine.images[this.name] = this; 
-				if (this.name in this.engine.sprites) this.engine.sprites[this.name].spriteImage = this;
-        		for (var name in this.engine.images) if (this.engine.images[name] === false) return;
-        		this.engine.imagesLoaded = true;
-        	}
-        	
-        	/* Set image source. */
-			image.src = map[name];
-			
-        }
+
+        /* DEMO CODE: Load some nice jams. */
+        var that = this;
+        this.manager.queue("song", RESOURCE.AUDIO, "assets/aesthic.m4a");
+        this.manager.load(function() { 
+            var song = that.manager.$("song");
+            song.volume = 0.1; 
+            song.play(); 
+        });
+        /* END DEMO CODE */
         
     }
-	
-	/* Load sounds. */
-	this.loadSounds = function(map) {
-		for (var name in map) {
-        	/* Set the value in the resource map. */
-        	this.sounds[name] = false;
-        	
-        	/* Create the sound. */
-        	var sound = new Audio();
-			//sound.loop = false;
-			sound.name = name;
-        	sound.engine = this;
-        	sound.canplaythrough = function() { 
-        		this.engine.sounds[this.name] = this;
-        		for (var name in this.engine.sounds) if (this.engine.sounds[name] === false) return;
-        		this.engine.soundsLoaded = true;
-        	}
-        	
-        	/* Set sound source. */
-			sound.src = map[name];
-			this.sounds[name] = sound;
-        }
-	}
     
     /* Update the engine and components. */
     this.update = function(delta) {
+        
         /* Update the sprites. */
-        for (var name in this.sprites) {
-            this.sprites[name].update(delta);
-        }
+        for (var name in this.entities) if (this.entities[name].autoupdate) this.sprites[name].update(delta);
 		
-		/* Change keys. */
-		for (var key in keys) if (keys[key] == KEY.PRESSED) keys[key] = KEY.DOWN;
+		/* Change keys from pressed to down. */
+		for (var key in this.keyboard) if (keys[key] == KEY.PRESSED) this.keyboard[key] = KEY.DOWN;
 
     }
     
@@ -150,10 +87,12 @@ function Engine(canvas) {
      
         /* Draw frames per second. */
         if (this.showFPS) {
+            var fps = this.renderTimes.map(function(x) { return 1000/x; }).reduce(function(a, b) { return a+b; }, 0) / this.renderTimes.length;
             this.context.fillStyle = "black";
             this.context.textAlign = "left";
             this.context.textBaseline = "hanging";
-            this.context.fillText(Math.round(1000 / delta) + " fps", 10, 8);
+            this.context.font = "20px Verdana";
+            this.context.fillText(Math.round(fps) + " fps", 10, 10);
         }
 		
         /* Draw the sprites. */
@@ -164,6 +103,7 @@ function Engine(canvas) {
     
     /* Call the update hook. */
     this._update = function() {
+        
         /* Get the delta. */
         var delta = Date.now() - this.updateTime;
         this.updateTime = Date.now();
@@ -186,6 +126,8 @@ function Engine(canvas) {
         if (delta > this.renderInterval) {
             this.render(delta);
             this.renderTime = Date.now();
+            this.renderTimes.unshift(delta);
+            this.renderTimes.splice(-1);
         }
         
     }
