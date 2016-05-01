@@ -1,101 +1,97 @@
+/** Sprite sheet. */
+function Sheet(image, rows, columns) {
+    
+    /* Sheet information. */
+    this.image = image;
+    this.rows = rows || 1;
+    this.columns = columns || 1;
+    
+    /** Get the current bbox. */
+    this.frame = function(index) {
+        var width = this.image.width / this.columns;
+        var height = this.image.height / this.rows;
+        var x = (index % this.columns) * width;
+        var y = (index / this.rows | 0) * height;
+        return [x, y, width, height];
+    }
+    
+}
+
 /* Main sprite. */
-function Sprite(x, y, w, h, rx, ry) {
+function Sprite(x, y, w, h, cx, cy) {
 
     /* Position (center). */
     this.pos = new Vector(x || 0, y || 0);
+    this.cpos = new Vector(cx || w/2 || 0, cy || h/2 || 0);
     
     /* Rotation about the center. */
     this.rotation = 0;
-    this.rpos = new Vector(rx || w/2 || 0, ry || h/2 || 0);
     
     /* Size. */
     this.width = w || 0;
     this.height = h || 0;
     
     /* Graphics. */
-    this.spriteImage;
+    this.sheet;
     
     /* Animations. */
     this.animations = {};
-    this.currentAnimation = "";
-    this.numRows;
-    this.numColumns;
+    this.animation = "";
     
-    /* Adds an animation. */
-    this.addAnimation = function(anim) {
-        this.animations[anim.name] = anim;
-    }
-	
-	/* Gets the current animation. */
-	this.getCurrentAnimation = function() {
-		return this.animations[this.currentAnimation];
-	}
+    /** Adds, checks, and gets animations. */
+    this.addAnimation = function(animation) { this.animations[animation.name] = animation; }
+    this.hasAnimation = function() { return this.animation in this.animations; }
+	this.getAnimation = function() { return this.animations[this.animation]; }
     
-    /* Sets the spritesheet properties. */
-    this.setSpriteSheetSize = function(numR, numC) {
-        this.numRows = numR;
-        this.numColumns = numC;
-    }
+    /** Sets the spritesheet properties. */
+    this.setSheet = function(sheet) { this.sheet = sheet; }
     
-    /* Moves sprite by the specified amount in each direction. */
-    this.translate = function(dx, dy) {
-        this.pos.x += dx;
-        this.pos.y += dy;
-    }
+    /** Moves sprite by the specified amount in each direction. */
+    this.translate = function(dx, dy) { this.pos.x += dx; this.pos.y += dy; }
     
-    /* Bounding box. */
-    this.bbox = function() {
-        var leftX = this.pos.x - this.width/2;
-        var topY = this.pos.y - this.height/2;
-        var box = [leftX * Math.cos(this.rotation) - topY * Math.sin(this.rotation), 
-                    leftX * Math.sin(this.rotation) + topY * Math.cos(this.rotation), this.width, this.height];
-    }
+    /** Bounding box. */
+    this.bbox = function() {}
     
-    /* Returns whether this sprite touches another one. */
-    this.touches = function(sprite) {
-        return !(this.pos.x + this.width < sprite.pos.x || 
-                 this.pos.x > sprite.pos.x + sprite.width || 
-                 this.pos.y + this.height < sprite.pos.y || 
-                 this.pos.y > sprite.pos.y + sprite.height);
-    }
-    
+    /** Returns whether this sprite touches another one. */
+    this.touches = function(sprite) {}
       
-    /* Default update method. Moves the object based on acceleration and velocity. */
-    this.update = function(delta) {
-        if (this.currentAnimation in this.animations) {
-            this.animations[this.currentAnimation].update();
-        }
-    }
+    /** Default update method. */
+    this.update = function(delta) {  if (this.hasAnimation()) this.getAnimation().update(); }
     
     /* Render the sprite. */
     this.render = function(context) {
-		if (this.spriteImage != null) {
+        
+        /* Check if the sprite has a sheet. */
+		if (this.sheet != null) {
             
+            /* Save and transform the canvas. */
             context.save();
             context.translate(this.pos.x, this.pos.y);
             context.rotate(-this.rotation);
             context.translate(-this.pos.x, -this.pos.y);
             
-			if (this.currentAnimation in this.animations) { // There's an animation
-			
-                var f = this.animations[this.currentAnimation].getCurrentFrame();
-				
-				// Get the subimage information
-				var subWidth = this.spriteImage.width / this.numColumns;
-				var subHeight = this.spriteImage.height / this.numRows;
-				var subX = (f % this.numColumns) * subWidth;
-				var subY = ((f / this.numColumns) | 0) * subHeight;
-				
-				// Draw the subimage
-				context.drawImage(this.spriteImage, subX, subY, subWidth, subHeight, 
-                                  this.pos.x-this.rpos.x, this.pos.y-this.rpos.y, this.width, this.height);
+            /* If there is an active animation. */
+			if (this.hasAnimation()) {
+			 
+                /* Create the clip, center, and draw. */
+                var box = this.sheet.frame(this.getAnimation.index);
+                var c = this.pos.copy().sub(this.rpos);
+                context.drawImage(this.sheet.image, box[0], box[1], box[2], box[3], c.x, c.y, this.width, this.height);
+            
+            /* No animation. */
+			} else { 
                 
-			} else { // Image but no animation
-				context.drawImage(this.spriteImage, 0, 0, this.spriteImage.width, this.spriteImage.height, 
-                                  this.pos.x-this.rpos.x, this.pos.y-this.rpos.y, this.width, this.height);
+                /* Center and draw. */
+                var centered = this.pos.copy().sub(this.rpos);
+				context.drawImage(this.sheet.image, 0, 0, this.sheet.image.width, this.sheet.image.height, c.x, c.y, this.width, this.height);
+                
 			}
             
+            /* Restore the context. */
             context.restore();
+            
 		}
+        
     }
+    
 }

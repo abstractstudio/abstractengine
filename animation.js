@@ -1,53 +1,53 @@
 /** An animation for a sprite. */
 function Animation(name, frames) {
     
-    /** The name of this animation (for reference). */
+    /* Main information. */
     this.name = name || "";
-    
-    /** Whether the aimation is playing. */
     this.playing = false;
-    
-    /** Whether the animation loops back and replays when it finishes. */
     this.loop = true;
     
-    /** The order of frames in this animation, specifed by index of the image in the spritesheet. */
-	this.frameIndices = frames || [];
-    
-	/** The number of seconds that each frame lasts */
+    /* Frame specific. */
+	this.index = 0;
+	this.indices = frames || [];
 	this.speed = 0.02;
-	
-	/** The current animation frame. */
-	this.frameIndex = 0;
-    
-	/** The time that the current frame started. */
-	this.frameStartTime = 0;
+	this.start = 0;
 	
 	/** Starts this animation from the beginning. */
 	this.play = function() {
-		this.frameIndex = 0;
-		this.frameStartTime = Date.now();
+		this.index = 0;
+		this.start = Date.now();
 		this.playing = true;
 	}
 	
 	/** Gets the index of the current animation frame in the spritesheet. */
-	this.getCurrentFrame = function() {
-	    return this.frameIndices[this.frameIndex];
+	this.frame = function() {
+	    return this.indices[this.index];
 	}
 	
-	/** Moves the animation forward.d */
+	/** Moves the animation forward. */
 	this.update = function() {
+        
+        /* Only change if playing. */
 	    if (this.playing) {
+            
+            /* Check if time to update. */
     	    var now = Date.now();
-    	    if (now - this.frameStartTime >= this.speed * 1000) { // if the animation should be advanced
-    	        this.frameStartTime = now;
-    	        this.frameIndex++;
-    	        
-    	        if (this.frameIndex >= this.frameIndices.length) { // if we reached the end of the animation
-    	            if (this.loop) this.frameIndex = 0;
+    	    if (now - this.start >= this.speed * 1000) {
+                
+                /* Set start time and increment index. */
+    	        this.start = now;
+    	        this.index++;
+                
+                /* Loop if should. */
+    	        if (this.index >= this.indices.length) {
+    	            if (this.loop) this.index = 0;
     	            else this.playing = false;
     	        }
+                
     	    }
+            
 	    }
+        
 	}
 	
 	

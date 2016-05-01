@@ -1,5 +1,5 @@
 /** Abstract Engine dependencies. */
-var dependencies = ["vector.js", "animation.js", "sprite.js", "engine.js"];
+var dependencies = ["resource.js", "vector.js", "animation.js", "sprite.js", "engine.js"];
 
 /** Require a set of javascript files. */
 function require(files, callback) {
@@ -15,7 +15,6 @@ function require(files, callback) {
             console.log("Made callback from require");
         }
     };
-    
     
     /* Iterate through files. */
     for (var i = 0; i < files.length; i++) {
@@ -36,6 +35,18 @@ function require(files, callback) {
         try { document.head.appendChild(script); }
         catch (e) { ready[i] = false; }
         
+    }
+    
+}
+
+/** Locate a member . */
+function locate(members) {
+    
+    /* Find each cross platform version of something. */
+    var w = window;
+    for (var i = 0; i < arguments.length; i++) {
+        var m = arguments[i];
+        w[m] = w[m] || w["webkit"+m] || w["moz"+m] || w["ms"+m];
     }
     
 }
