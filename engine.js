@@ -24,7 +24,7 @@ function Engine(canvas) {
     this.entities = {};
     
     /* Engine loops. */
-    this.showFPS = true;
+    this.showDisplay = true;
     this.updateLimit = 60;
     this.updateInterval = 1000 / this.updateLimit;
     this.updateTime = 0;
@@ -65,9 +65,6 @@ function Engine(canvas) {
             song.play(); 
         });
         /* END DEMO CODE */
-        
-		/* Some static context stuff. */
-        this.context.font = "20px Verdana";
 		
     }
     
@@ -85,27 +82,17 @@ function Engine(canvas) {
     }
     
     /* Render the canvas. */
-    this.render = function(delta, clear) {
+    this.render = function(delta) {
         
         /* Clear the canvas. */
-        if (clear !== false) {
-            this.context.fillStyle = "white";
-            this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        }
+		this.context.fillStyle = "white";
+		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
-        /* Draw frames per second. */
-        if (this.showFPS) {
-            var fps = this.renderTimes.map(function(x) { return 1000/x; }).reduce(function(a, b) { return a+b; }, 0) / this.renderTimes.length;
-            this.context.fillStyle = "black";
-            this.context.textAlign = "left";
-            this.context.textBaseline = "hanging";
-            this.context.fillText(Math.round(fps) + " fps", 10, 10);
-        }
-        
+		/* Draw data. */
+		if (this.showDisplay) this.display();
+		
         /* Draw the sprites. */
-        for (var name in this.entities) {
-            if (this.entities[name].autorender) this.entities[name].render(this.context);
-        }
+        for (var name in this.entities) if (this.entities[name].autorender) this.entities[name].render(this.context);
         
     }
     
@@ -149,5 +136,13 @@ function Engine(canvas) {
         this._render();
         
     }
+	
+	/* Draw FPS. */
+	this.display = function() {
+		var fps = this.renderTimes.map(function(x) { return 1000/x; }).reduce(function(a, b) { return a+b; }, 0) / this.renderTimes.length;
+		this.context.textAlign = "left";
+		this.context.textBaseline = "hanging";
+		this.context.fillText(Math.round(fps) + " fps", 10, 10);
+	}
     
 }
