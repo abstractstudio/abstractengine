@@ -11,7 +11,7 @@ function Sheet(image, rows, columns) {
         var width = this.image.width / this.columns;
         var height = this.image.height / this.rows;
         var x = (index % this.columns) * width;
-        var y = (index / this.rows | 0) * height;
+        var y = (index / this.columns | 0) * height;
         return [x, y, width, height];
     }
     
@@ -28,7 +28,7 @@ function Sprite(engine, x, y, w, h, cx, cy) {
     this.cpos = new Vector(cx || w/2 || 0, cy || h/2 || 0);
     
     /* Rotation about the center. */
-    this.rotation = 0;
+    this.rot = 0;
     
     /* Size. */
     this.width = w || 0;
@@ -70,22 +70,22 @@ function Sprite(engine, x, y, w, h, cx, cy) {
             /* Save and transform the canvas. */
             context.save();
             context.translate(this.pos.x, this.pos.y);
-            context.rotate(-this.rotation);
+            context.rotate(-this.rot);
             context.translate(-this.pos.x, -this.pos.y);
             
             /* If there is an active animation. */
 			if (this.hasAnimation()) {
-			 
+                
                 /* Create the clip, center, and draw. */
-                var box = this.sheet.frame(this.getAnimation.index);
-                var c = this.pos.copy().sub(this.rpos);
+                var box = this.sheet.frame(this.getAnimation().index);
+                var c = this.pos.copy().sub(this.cpos);
                 context.drawImage(this.sheet.image, box[0], box[1], box[2], box[3], c.x, c.y, this.width, this.height);
-            
+                
             /* No animation. */
 			} else { 
                 
                 /* Center and draw. */
-                var centered = this.pos.copy().sub(this.rpos);
+                var centered = this.pos.copy().sub(this.cpos);
 				context.drawImage(this.sheet.image, 0, 0, this.sheet.image.width, this.sheet.image.height, c.x, c.y, this.width, this.height);
                 
 			}
