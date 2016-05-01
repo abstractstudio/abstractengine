@@ -31,7 +31,7 @@ function Engine(canvas) {
     this.renderLimit = 100;
     this.renderInterval = 1000 / this.renderLimit;
     this.renderTime = 0;
-    this.renderTimes = new Array(50);
+    this.renderTimes = new Array(100);
             
     /* Set up the engine and its components. */
     this.setup = function() {
@@ -66,6 +66,9 @@ function Engine(canvas) {
         });
         /* END DEMO CODE */
         
+		/* Some static context stuff. */
+        this.context.font = "20px Verdana";
+		
     }
     
     /* Update the engine and components. */
@@ -75,9 +78,9 @@ function Engine(canvas) {
         for (var name in this.entities) {
             if (this.entities[name].autoupdate) this.entities[name].update(delta);
         }
-		
-		/* Change keys from pressed to down. */
-		for (var key in this.keyboard) if (this.keyboard[key] == KEY.PRESSED) this.keyboard[key] = KEY.DOWN;
+        
+        /* Change keys from pressed to down. */
+        for (var key in this.keyboard) if (this.keyboard[key] == KEY.PRESSED) this.keyboard[key] = KEY.DOWN;
 
     }
     
@@ -96,10 +99,9 @@ function Engine(canvas) {
             this.context.fillStyle = "black";
             this.context.textAlign = "left";
             this.context.textBaseline = "hanging";
-            this.context.font = "20px Verdana";
             this.context.fillText(Math.round(fps) + " fps", 10, 10);
         }
-		
+        
         /* Draw the sprites. */
         for (var name in this.entities) {
             if (this.entities[name].autorender) this.entities[name].render(this.context);
