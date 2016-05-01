@@ -5,7 +5,7 @@ locate("requestAnimationFrame");
 var KEY = {PRESSED: 1, DOWN: 2, DEFAULT: [37, 39, 38, 40], 
            W: 87, A: 65, S: 83, D: 68, 
            UP: 38, LEFT: 37, DOWN: 40, RIGHT: 39, 
-           C: 67,
+           C: 67, SPACE: 32,
            ESCAPE: 27};
 
 /* The main engine class. */
