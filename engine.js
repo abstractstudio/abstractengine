@@ -74,7 +74,7 @@ function Engine(canvas) {
         for (var name in this.entities) if (this.entities[name].autoupdate) this.sprites[name].update(delta);
 		
 		/* Change keys from pressed to down. */
-		for (var key in this.keyboard) if (keys[key] == KEY.PRESSED) this.keyboard[key] = KEY.DOWN;
+		for (var key in this.keyboard) if (this.keyboard[key] == KEY.PRESSED) this.keyboard[key] = KEY.DOWN;
 
     }
     
