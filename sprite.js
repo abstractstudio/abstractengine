@@ -58,7 +58,10 @@ function Sprite(engine, x, y, w, h, cx, cy) {
     
     /** Returns whether this sprite touches another one. */
     this.touches = function(sprite) {}
-      
+
+	/** Returns the top left point of the sprite. */
+	this.topLeft = function() { return this.pos.copy().sub(this.cpos) };
+	
     /** Default update method. */
     this.update = function(delta) {  if (this.hasAnimation()) this.getAnimation().update(); }
     
