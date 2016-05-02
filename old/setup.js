@@ -1,11 +1,8 @@
-/** Setup utilities. */
-var setup = {};
-
 /** Abstract Engine dependencies. */
 var dependencies = ["resource.js", "vector.js", "animation.js", "sprite.js", "engine.js"];
 
 /** Require a set of javascript files. */
-setup.require = function(files, callback) {
+function require(files, callback) {
     
     /* Set up ready hooks. */
     var ready = [];
@@ -42,8 +39,17 @@ setup.require = function(files, callback) {
     
 }
 
-/** Locate a crossplatform feature. */
-function crossplatform(name) { window[name] = window[name] || window["webkit"+name] || window["moz"+name] || window["ms"+name]; }
+/** Locate a member . */
+function locate(members) {
+    
+    /* Find each cross platform version of something. */
+    var w = window;
+    for (var i = 0; i < arguments.length; i++) {
+        var m = arguments[i];
+        w[m] = w[m] || w["webkit"+m] || w["moz"+m] || w["ms"+m];
+    }
+    
+}
 
 /* Check start function. */
 if (typeof start === "function") {
