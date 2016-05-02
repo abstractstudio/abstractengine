@@ -13,6 +13,7 @@ function Sheet(image, rows, columns) {
         var x = (index % this.columns) * width;
         var y = (index / this.columns | 0) * height;
         return [x, y, width, height];
+        console.log(x, y);
     }
     
 }
