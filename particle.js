@@ -27,11 +27,14 @@ function Particle(x, y, life) {
 	/** Draws a circle with the particle's properties. */
 	this.render = function(context) {
 		var color = 'rgba(' + this.color[0] + ', ' + this.color[1] + ', ' + this.color[2] + ', ' + this.color[3] + ')';
+        
 		context.fillStyle = color;
-		context.beginPath();
+		
+       /* context.beginPath();
 		context.arc(this.pos.x, this.pos.y, Math.max(this.radius, 0), 0, 2*Math.PI, true);
 		context.closePath();
-		context.fill();
+		context.fill();*/
+        context.fillRect(this.pos.x - this.radius, this.pos.y - this.radius, this.radius * 2, this.radius * 2);
 	}
 	
 }
@@ -72,6 +75,12 @@ function ParticleSystem(x, y) {
         endColor: [], 
         endColorVar: [0, 0, 0, 0]
     }
+    
+    this.setProperties = function(properties) {
+        for (var prop in properties) {
+            this.properties[prop] = properties[prop];
+        }
+    }
 	
 	
 	this.init = function() {
@@ -93,7 +102,7 @@ function ParticleSystem(x, y) {
 		// Set particle velocity
 		var angle = this.properties.angle + this.properties.angleVar*this.rand();
 		var speed = this.properties.speed + this.properties.speedVar*this.rand();
-		particle.velocity = new Vector(speed * Math.cos(angle * Math.PI/180), speed * Math.sin(angle * Math.PI/180));
+		particle.velocity = new Vector(speed * Math.cos(angle), speed * Math.sin(angle));
 		
 		// Set particle size (start and end)
 		particle.radius = this.properties.startRadius + this.properties.startRadiusVar*this.rand();
@@ -134,7 +143,7 @@ function ParticleSystem(x, y) {
 	
 	this.update = function(delta) {
 		if (!this.active) return;
-		
+        
 		if (this.emissionRate) {
 			var rate = 1.0 / this.emissionRate;
 			this.emitCounter += delta;

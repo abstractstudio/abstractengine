@@ -93,7 +93,6 @@ function Engine(canvas) {
     
     /* Update the engine and components. */
     this.update = function(delta) {
-        
         /* Update the sprites. */
         for (var name in this.entities) {
             if (this.entities[name].autoupdate) this.entities[name].update(delta);
