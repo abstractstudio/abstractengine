@@ -66,6 +66,29 @@ function Engine(canvas) {
         });
         /* END DEMO CODE */
 		
+		/* Particle Demo */
+		this.particleSystem = new ParticleSystem(400, 0);
+        this.particleSystem.properties.posVar = new Vector(800, 0);
+		this.particleSystem.properties.life = 15000;
+		this.particleSystem.properties.lifeVar = 100;
+		this.particleSystem.properties.angle = 90;
+		this.particleSystem.properties.angleVar = 4;
+		this.particleSystem.properties.speed = 0.175;
+		this.particleSystem.properties.speedVar = 0.0025;
+		this.particleSystem.properties.startRadius = 2.0;
+        this.particleSystem.properties.startRadiusVar = 1.0;
+       // this.particleSystem.properties.endRadius = 0.01;
+       // this.particleSystem.properties.endRadiusVar = 0.0;
+		this.particleSystem.properties.startColor = [238, 233, 233, 255];
+        //this.particleSystem.properties.startColorVar = [50, 0, 0, 0];
+       // this.particleSystem.properties.endColor = [255, 0, 0, 255];
+		
+		this.particleSystem.totalParticles = 10000;
+		this.particleSystem.emissionRate = 1.5;
+		
+		this.particleSystem.init();
+		/* END Particle Demo */
+		
     }
     
     /* Update the engine and components. */
@@ -78,14 +101,16 @@ function Engine(canvas) {
         
         /* Change keys from pressed to down. */
         for (var key in this.keyboard) if (this.keyboard[key] == KEY.PRESSED) this.keyboard[key] = KEY.DOWN;
-
+		
+        /* Particle demo */
+		this.particleSystem.update(delta);
     }
     
     /* Render the canvas. */
     this.render = function(delta) {
         
         /* Clear the canvas. */
-		this.context.fillStyle = "white";
+		this.context.fillStyle = "black";
 		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         
 		/* Draw data. */
@@ -94,6 +119,8 @@ function Engine(canvas) {
         /* Draw the sprites. */
         for (var name in this.entities) if (this.entities[name].autorender) this.entities[name].render(this.context);
         
+        /* Particle demo */
+		this.particleSystem.render(this.context);
     }
     
     /* Call the update hook. */

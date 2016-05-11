@@ -1,5 +1,5 @@
 /** Abstract Engine dependencies. */
-var dependencies = ["resource.js", "vector.js", "animation.js", "sprite.js", "engine.js"];
+var dependencies = ["resource.js", "vector.js", "particle.js", "animation.js", "sprite.js", "engine.js"];
 
 /** Require a set of javascript files. */
 function require(files, callback) {
