@@ -26,10 +26,9 @@ function Particle(x, y, life) {
 	
 	/** Draws a circle with the particle's properties. */
 	this.render = function(context) {
-		var color = 'rgba(' + this.color[0] + ', ' + this.color[1] + ', ' + this.color[2] + ', ' + this.color[3] + ')';
+		var color = 'rgba(' + Math.round(this.color[0]) + ', ' + Math.round(this.color[1]) + ', ' + Math.round(this.color[2]) + ', ' + Math.round(this.color[3]) + ')';
         
 		context.fillStyle = color;
-		
        /* context.beginPath();
 		context.arc(this.pos.x, this.pos.y, Math.max(this.radius, 0), 0, 2*Math.PI, true);
 		context.closePath();
@@ -107,7 +106,7 @@ function ParticleSystem(x, y) {
 		// Set particle size (start and end)
 		particle.radius = this.properties.startRadius + this.properties.startRadiusVar*this.rand();
         if (this.properties.endRadius) {  
-            var endradius = this.endRadius + this.endRadiusVar*this.rand();
+            var endradius = this.properties.endRadius + this.properties.endRadiusVar*this.rand();
             particle.deltaRadius = (endradius - particle.radius) / particle.life;
         }
 		
