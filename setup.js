@@ -2,7 +2,7 @@
 var setup = {};
 
 /** Abstract Engine dependencies. */
-var dependencies = ["resource.js", "vector.js", "animation.js", "sprite.js", "engine.js"];
+var dependencies = ["geometry.js", "callback.js", "resource.js", "modifier.js", "input.js", "engine.js"];
 
 /** Require a set of javascript files. */
 setup.require = function(files, callback) {
@@ -53,7 +53,7 @@ if (typeof start === "function") {
     /* Load the engine. */
     if (typeof ENGINE !== "string") var ENGINE = "";
     dependencies = dependencies.map(function(file) { return ENGINE+file; });
-    require(dependencies, start);
+    setup.require(dependencies, start);
     console.log("Loaded dependencies");
 
 /* Otherwise. */
