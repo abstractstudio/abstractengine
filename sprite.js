@@ -90,7 +90,7 @@ function Sprite(engine, x, y, w, h, cx, cy) {
                 
                 /* Center and draw. */
                 var centered = this.pos.copy().sub(this.cpos);
-                context.drawImage(this.sheet.image, 0, 0, this.sheet.image.width, this.sheet.image.height, c.x, c.y, this.width, this.height);
+                context.drawImage(this.sheet.image, 0, 0, this.sheet.image.width, this.sheet.image.height, centered.x, centered.y, this.width, this.height);
                 
             }
             
