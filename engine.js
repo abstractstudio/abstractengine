@@ -52,8 +52,8 @@ function Engine(canvas) {
         
         /* Mouse position. */
         document.addEventListener("mousemove", function(e) {
-            that.mouse.x = event.clientX;
-            that.mouse.y = event.clientY;
+            that.mouse.x = e.clientX;
+            that.mouse.y = e.clientY;
         });
 
         /* DEMO CODE: Load some nice jams. 
