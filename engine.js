@@ -28,6 +28,9 @@ function Engine(canvas) {
             if (entity.update && entity.update.auto === true) this.entities[name].update(delta);
         }
         
+        /* Update input. */
+        this.input.update(delta);
+        
     }
     
     /** Default auto render loop. */
