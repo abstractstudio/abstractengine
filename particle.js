@@ -1,5 +1,6 @@
 function Particle(x, y, life) {
 	this.pos = new Vector(x, y) || (new Vector(0, 0));
+    this.angle = 0;
 	this.vel = new Vector(0, 0);
 	
 	this.alive = true;
@@ -25,15 +26,29 @@ function Particle(x, y, life) {
 	}
 	
 	/** Draws a circle with the particle's properties. */
-	this.render = function(context) {
-		var color = 'rgba(' + Math.round(this.color[0]) + ', ' + Math.round(this.color[1]) + ', ' + Math.round(this.color[2]) + ', ' + Math.round(this.color[3]) + ')';
+	this.render = function(context, image) {
+        if (image) {
+            context.save();
+            context.translate(this.pos.x, this.pos.y);
+            context.rotate(-this.rot);
+            context.translate(-this.pos.x, -this.pos.y);
+            
+            /* Center and draw. */
+            context.drawImage(image, 0, 0, image.width, image.height, this.pos.x -this.radius, this.pos.y -this.radius, this.radius*2, this.radius*2);
+            
+            /* Restore the context. */
+            context.restore();
+            
+        } else {
+            var color = 'rgba(' + Math.round(this.color[0]) + ', ' + Math.round(this.color[1]) + ', ' + Math.round(this.color[2]) + ', ' + Math.round(this.color[3]) + ')';
         
-		context.fillStyle = color;
-       /* context.beginPath();
-		context.arc(this.pos.x, this.pos.y, Math.max(this.radius, 0), 0, 2*Math.PI, true);
-		context.closePath();
-		context.fill();*/
-        context.fillRect(this.pos.x - this.radius, this.pos.y - this.radius, this.radius * 2, this.radius * 2);
+            context.fillStyle = color;
+           /* context.beginPath();
+            context.arc(this.pos.x, this.pos.y, Math.max(this.radius, 0), 0, 2*Math.PI, true);
+            context.closePath();
+            context.fill();*/
+            context.fillRect(this.pos.x - this.radius, this.pos.y - this.radius, this.radius * 2, this.radius * 2);
+        }
 	}
 	
 }
@@ -52,6 +67,8 @@ function ParticleSystem(x, y) {
 	
 	/* Particle properties. */
     this.properties = {
+        image: null, 
+        
         pos: new Vector(x, y), 
         posVar: new Vector(0, 0), 
 
@@ -98,10 +115,10 @@ function ParticleSystem(x, y) {
         var y = this.properties.pos.y + this.properties.posVar.y*this.rand();
 		var particle = new Particle(x, y, this.properties.life + this.properties.lifeVar*this.rand());
 		
-		// Set particle velocity
-		var angle = this.properties.angle + this.properties.angleVar*this.rand();
+		// Set particle angle and velocity
+		particle.angle = this.properties.angle + this.properties.angleVar*this.rand();
 		var speed = this.properties.speed + this.properties.speedVar*this.rand();
-		particle.velocity = new Vector(speed * Math.cos(angle), speed * Math.sin(angle));
+		particle.velocity = new Vector(speed * Math.cos(particle.angle), speed * Math.sin(particle.angle));
 		
 		// Set particle size (start and end)
 		particle.radius = this.properties.startRadius + this.properties.startRadiusVar*this.rand();
@@ -154,7 +171,6 @@ function ParticleSystem(x, y) {
 		}
 		
 		this.particleIndex = 0;
-		
 		while (this.particleIndex < this.particleCount) {
 			var particle = this.particlePool[this.particleIndex];
 			particle = this.updateParticle(delta, particle, this.particleIndex);
@@ -190,8 +206,12 @@ function ParticleSystem(x, y) {
 	this.render = function(context) {
 		for (var i = 0; i < this.particleCount; i++) {
 			var particle = this.particlePool[i];
-			if (particle.alive && particle.color) {
-				particle.render(context);
+			if (particle.alive) {
+                if (this.properties.image) {
+                    particle.render(context, this.properties.image)
+                } else if (particle.color) {
+				    particle.render(context);
+                }
 			}
 		}
 	}
