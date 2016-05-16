@@ -89,6 +89,8 @@ function Manager() {
                 for (var name in that.jobs) {
                     if (that.jobs[name].status <= RESOURCE.LOADING) return;
                     that.status = Math.max(that.status, that.jobs[name].status);
+                    that.jobs[name].content.oncanplaythrough = function() {};
+                    that.jobs[name].content.onerror = function() {};
                 }
                 
                 /* Callback. */
