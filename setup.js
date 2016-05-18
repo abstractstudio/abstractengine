@@ -6,7 +6,7 @@ var setup = function(hook) {
 
         /* Load the engine. */
         console.log("Loading dependencies from " + (setup.directory || "."));
-        var dependencies = setup.dependencies.map(function(file) { return file.replace("~", setup.dependencies); });
+        var dependencies = setup.dependencies.map(function(file) { return file.replace("~", setup.directory); });
         setup.require(dependencies, hook || main);
         console.log("Loaded dependencies");
 
