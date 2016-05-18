@@ -44,7 +44,7 @@ setup.require = function(files, callback) {
 
 /** Locate a crossplatform feature. */
 function crossplatform(name) { 
-	window[name] = window[name] || window["webkit"+name] || window["moz"+name] || window["ms"+name]; 
+    window[name] = window[name] || window["webkit"+name] || window["moz"+name] || window["ms"+name]; 
 }
 
 /* Check start function. */
