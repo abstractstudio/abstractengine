@@ -1,5 +1,3 @@
-
-
 /** The main game engine. */
 function Engine(canvas) {
     
@@ -98,10 +96,10 @@ function Engine(canvas) {
         /* Draw the frames per second. */
         var fps = this._render.history.map(function(x) { return 1000/x; }).reduce(function(a, b) { return a+b; }, 0) / this._render.history.length;
         this.context.fillStyle = "black";
-		this.context.textAlign = "left";
-		this.context.textBaseline = "hanging";
+        this.context.textAlign = "left";
+        this.context.textBaseline = "hanging";
         this.context.font = "16px Verdana";
-		this.context.fillText(Math.round(fps) + " fps", 10, 10);
+        this.context.fillText(Math.round(fps) + " fps", 10, 10);
         
     }
     
