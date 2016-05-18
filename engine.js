@@ -20,12 +20,6 @@ function Engine(canvas) {
     /** Default auto update loop. */
     this.update = function(delta) { 
         
-        /* Update the sprites. */
-        for (var name in this.entities) {
-            var entity = this.entities[name];
-            if (entity.update && entity.update.auto === true) this.entities[name].update(delta);
-        }
-        
         /* Update input. */
         this.input.update(delta);
         
@@ -38,12 +32,6 @@ function Engine(canvas) {
         //this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.fillStyle = "white";
         this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        
-        /* Draw any sprites. */
-        for (var name in this.entities) {
-            var entity = this.entities[name];
-            if (entity.render && entity.render.auto === true) this.entities[name].render(delta);
-        }
         
         /* Run the display. */
         if (this.display.visible) this.display();
