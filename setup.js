@@ -6,7 +6,7 @@ var setup = function(hook) {
 
         /* Load the engine. */
         console.log("Loading dependencies from " + (setup.directory || "."));
-        var dependencies = setup.dependencies.map(function(file) { return setup.directory+file; });
+        var dependencies = setup.dependencies.map(function(file) { return file.replace("~", setup.dependencies); });
         setup.require(dependencies, hook || main);
         console.log("Loaded dependencies");
 
@@ -16,7 +16,7 @@ var setup = function(hook) {
 };
 
 /** Abstract Engine dependencies. */
-setup.dependencies = ["geometry.js", "callback.js", "resource.js", "modifier.js", "input.js", "engine.js"];
+setup.dependencies = ["~geometry.js", "~callback.js", "~resource.js", "~modifier.js", "~input.js", "~engine.js"];
 
 /** Define the engine path. */
 setup.directory = "abstractengine/";
@@ -30,8 +30,8 @@ setup.require = function(files, callback) {
     var and = function(a, b) { return a && b; };
     var check = function() {
         if (ready.indexOf(null) == -1 && !finished) {
-            callback(ready.reduce(and));
             finished = true;
+            callback(ready.reduce(and));
             console.log("Made callback from require");
         }
     };
