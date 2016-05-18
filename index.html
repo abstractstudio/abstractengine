@@ -17,7 +17,7 @@
             }
         </style>
         <script type="text/javascript">
-            function start() {
+            function main() {
                 var canvas = document.getElementById("canvas");
                 var engine = new Engine(canvas);
                 engine.start();
@@ -27,5 +27,9 @@
     <body style="text-align: center; margin-top: 4em;">
         <canvas width=800 height=600 id="canvas">HTML5 unavailable</canvas>
         <script type="text/javascript" src="setup.js"></script>
+        <script type="text/javascript">
+            setup.directory = "";  // Because this file is in the desting directory.
+            setup();
+        </script>
     </body>
 </html>

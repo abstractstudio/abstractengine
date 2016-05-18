@@ -44,11 +44,17 @@ input.Manager = function Manager(engine) {
     });
     
     /** Update the input manager automatically. */
-    function update() {
+    this.update = function() {
         
         /* Set anything that is pressed to down. */
-        for (var k in this.keyboard) if (this.keyboard[k] == input.STATE.PRESSED) this.keyboard[k] = input.STATE.DOWN;
-        ["left", "middle", "right"].map(function(k) { if (this.mouse[k] == input.STATE.PRESSED) this.mouse[k] = input.STATE.DOWN; });
+        for (var k in this.keyboard) {
+            if (this.keyboard[k] == input.STATE.PRESSED) this.keyboard[k] = input.STATE.DOWN;
+        }
+
+        for (var k in this.mouse) {
+            if (k == "x" || k == "y") continue;
+            if (this.mouse[k] == input.STATE.PRESSED) this.mouse[k] = input.STATE.DOWN; 
+        }
     
     }
 }

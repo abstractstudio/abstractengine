@@ -1,8 +1,25 @@
 /** Setup utilities. */
-var setup = {};
+var setup = function(hook) {
+
+    /* Check start function. */
+    if (hook || typeof main === "function") {
+
+        /* Load the engine. */
+        console.log("Loading dependencies from " + (setup.directory || "."));
+        var dependencies = setup.dependencies.map(function(file) { return setup.directory+file; });
+        setup.require(dependencies, hook || main);
+        console.log("Loaded dependencies");
+
+    /* Otherwise. */
+    } else { console.error("No main function is defined"); }
+
+};
 
 /** Abstract Engine dependencies. */
-var dependencies = ["geometry.js", "callback.js", "resource.js", "modifier.js", "input.js", "engine.js"];
+setup.dependencies = ["geometry.js", "callback.js", "resource.js", "modifier.js", "input.js", "engine.js"];
+
+/** Define the engine path. */
+setup.directory = "abstractengine/";
 
 /** Require a set of javascript files. */
 setup.require = function(files, callback) {
@@ -41,20 +58,3 @@ setup.require = function(files, callback) {
     }
     
 }
-
-/** Locate a crossplatform feature. */
-function crossplatform(name) { 
-    window[name] = window[name] || window["webkit"+name] || window["moz"+name] || window["ms"+name]; 
-}
-
-/* Check start function. */
-if (typeof start === "function") {
-    
-    /* Load the engine. */
-    if (typeof ENGINE !== "string") var ENGINE = "";
-    dependencies = dependencies.map(function(file) { return ENGINE+file; });
-    setup.require(dependencies, start);
-    console.log("Loaded dependencies");
-
-/* Otherwise. */
-} else { console.error("No start function is defined"); }
