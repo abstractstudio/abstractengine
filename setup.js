@@ -16,7 +16,7 @@ var setup = function(hook) {
 };
 
 /** Abstract Engine dependencies. */
-setup.dependencies = ["~geometry.js", "~callback.js", "~resource.js", "~modifier.js", "~input.js", "~engine.js"];
+setup.dependencies = ["~geometry.js", "~callback.js", "~resource.js", "~modifier.js", "~input.js", "~engine.js", "~sprite.js"];
 
 /** Define the engine path. */
 setup.directory = "abstractengine/";
