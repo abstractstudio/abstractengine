@@ -33,5 +33,15 @@ geometry.Vector = function Vector(x, y) {
     
 }
 
+/** Class method that returns a bbox. */
+geometry.bbox = function() {
+    return [this.transform.x, this.transform.y, this.width, this.height];
+}
+
+/** Class method that returns a coordinate box. */
+geometry.cbox = function() {
+    return [this.transform.x, this.transform.y, this.transform.x + this.width, this.transform.y + this.height];
+}
+
 /** Get the distance between two vectors. */
 geometry.Vector.distance = function(a, b) { return Math.sqrt((b.x-a.x)*(b.x-a.x) + (b.y-a.y)*(b.y-a.y)); }
