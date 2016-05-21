@@ -45,5 +45,5 @@ sprite.Sprite = function Sprite(x, y, w, h, c, d) {
     
     /** Render the sprite. */
     this.render = function(context) {}
-    
+
 }
