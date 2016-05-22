@@ -9,6 +9,11 @@ sprite.Transform = function Transform(x, y, r, v, w) {
     this.rotation = r || 0;
     this.scale = new geometry.Vector(v || 0, w || 0);
     
+    /** Combine two transforms. */
+    this.with = function(other) {
+        return new Transform(this.x + other.x, this.y + other.y, this.r + other.r, this.v * other.v, this.w * other.w);
+    }
+    
 }
 
 /** Fancy property methods. */
@@ -33,8 +38,8 @@ sprite.Sprite = function Sprite(x, y, w, h, c, d) {
     
     /** Transform and center. */
     this.transform = new sprite.Transform(x, y);
-    this.width = 0;
-    this.height = 0;
+    this.width = w || 0;
+    this.height = h || 0;
     this.center = c && d && new geometry.Vector(c, d);  // null if c or d are not defined
     
     /** Bounding box. */
