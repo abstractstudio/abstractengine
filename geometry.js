@@ -33,6 +33,10 @@ geometry.Vector = function Vector(x, y) {
     
 }
 
+geometry.Vector.inside = function(v, a, b, w, h) {
+    return geometry.inside(v.x, v.y, a, b, w, h);
+}
+
 /** Class method that returns a bbox. */
 geometry.bbox = function() {
     return [this.transform.x, this.transform.y, this.width, this.height];
@@ -41,6 +45,11 @@ geometry.bbox = function() {
 /** Class method that returns a coordinate box. */
 geometry.cbox = function() {
     return [this.transform.x, this.transform.y, this.transform.x + this.width, this.transform.y + this.height];
+}
+
+/** Check if a point is inside a bounding box. */
+geometry.inside = function(x, y, a, b, w, h) {
+    return a <= x && x <= a+w && b <= y && y <= b+h;
 }
 
 /** Get the distance between two vectors. */
