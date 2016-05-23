@@ -33,8 +33,8 @@ geometry.Vector = function Vector(x, y) {
     
 }
 
-geometry.Vector.inside = function(v, a, b, w, h) {
-    return geometry.inside(v.x, v.y, a, b, w, h);
+geometry.Vector.inside = function(vp, vb, w, h) {
+    return geometry.inside(vp.x, vp.y, vb.x, vb.y, w, h);
 }
 
 /** Class method that returns a bbox. */
