@@ -93,7 +93,7 @@ resource.Manager = function Manager() {
             
             /* Get, set callback, load. */
             var job = this.jobs.shift();
-            var hook = function() {
+            var callback = function() {
                 
                 /* Check if all jobs are done. */
                 for (var j in that.jobs) {
@@ -108,7 +108,7 @@ resource.Manager = function Manager() {
             
             /* Load. */
             this.map[job.name] = job;
-            job.load(hook);
+            job.load(callback);
             
         }
     
