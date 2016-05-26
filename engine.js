@@ -46,7 +46,7 @@ function Engine(canvas) {
         this._update.time = Date.now();
         
         /* Call the update. */
-        this.update();
+        this.update(delta);
         
     }
     
