@@ -92,7 +92,7 @@ resource.Manager = function Manager() {
         for (var i in this.jobs) {
             
             /* Get, set callback, load. */
-            var job = this.jobs.shift();
+            var job = this.jobs[i];
             var callback = function() {
                 
                 /* Check if all jobs are done. */
@@ -100,6 +100,9 @@ resource.Manager = function Manager() {
                     if (that.jobs[j].status <= resource.LOADING) return;
                     that.status = Math.max(that.status, that.jobs[j].status);
                 }
+
+                /* Clear jobs. */
+                this.jobs = [];
                 
                 /* Callback. */
                 hook();
