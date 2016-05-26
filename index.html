@@ -17,9 +17,28 @@
             }
         </style>
         <script type="text/javascript">
+            var engine;
             function main() {
                 var canvas = document.getElementById("canvas");
-                var engine = new Engine(canvas);
+                
+                function Test(canvas) {
+                    
+                    Engine.call(this, canvas);
+                    
+                    this.setup = function() {
+                        this.resources.queue("aesthic", resource.AUDIO, "assets/aesthic.m4a");
+                        this.resources.queue("test", resource.IMAGE, "assets/test.jpg");
+                        var that = this;
+                        this.resources.load(() => {
+                            that.resources.$("aesthic").play();
+                            console.log(5);
+                        });
+                        
+                    }
+                    
+                }
+                
+                engine = new Test(canvas);
                 engine.start();
             }
         </script>
