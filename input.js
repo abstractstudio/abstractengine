@@ -31,8 +31,8 @@ input.Manager = function Manager(engine) {
     });
     
     document.addEventListener("mousemove", function(e) { 
-        mouse.x = event.clientX - (engine.canvas ? engine.canvas.offsetLeft + document.body.scrollLeft : 0);
-        mouse.y = event.clientY - (engine.canvas ? engine.canvas.offsetTop + document.body.scrollTop : 0); 
+        mouse.x = e.clientX - (engine.canvas ? engine.canvas.offsetLeft + document.body.scrollLeft : 0);
+        mouse.y = e.clientY - (engine.canvas ? engine.canvas.offsetTop + document.body.scrollTop : 0); 
     });
     
     document.addEventListener("mousedown", function(e) {
