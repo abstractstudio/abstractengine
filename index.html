@@ -2,21 +2,53 @@
     <head>
         <title>Engine Test</title>
         <style>
-            body { text-align: center; margin-top: 4em; background-color: #DDD; }
-            canvas { border-radius: 0.5em; }
+            body {
+                text-align: center; 
+                background-color: #DDD; 
+            }
+            canvas { 
+                border-radius: 0.5em; 
+                position: absolute; 
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
         </style>
         <script type="text/javascript">
-            var ENGINE = "";
-            function start() {
+            var engine;
+            function main() {
                 var canvas = document.getElementById("canvas");
-                var engine = new Engine(canvas);
+                
+                function Test(canvas) {
+                    
+                    Engine.call(this, canvas);
+                    
+                    this.setup = function() {
+                        this.resources.queue("aesthic", resource.AUDIO, "assets/aesthic.m4a");
+                        this.resources.queue("test", resource.IMAGE, "assets/test.jpg");
+                        var that = this;
+                        this.resources.load(() => {
+                            that.resources.$("aesthic").play();
+                            console.log(5);
+                        });
+                        
+                    }
+                    
+                }
+                
+                engine = new Test(canvas);
                 engine.start();
             }
         </script>
-        <script type="text/javascript" src="setup.js"></script>
     </head>
     <body style="text-align: center; margin-top: 4em;">
         <canvas width=800 height=600 id="canvas">HTML5 unavailable</canvas>
-        <p style="font-family: 8bit;">Hello, world!</p>
+        <script type="text/javascript" src="setup.js"></script>
+        <script type="text/javascript">
+            setup.directory = "";  // Because this file is in the desting directory.
+            setup();
+        </script>
     </body>
 </html>

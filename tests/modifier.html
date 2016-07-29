@@ -1,0 +1,35 @@
+<html>
+    <body>
+        <script src="modifier.js"></script>
+        <script>
+            function Reversible(x) {
+                modifier.Modifier.call(this, "reversible");
+                
+                this.x = x;
+                
+                this.type = modifier.REVERSIBLE;
+                this.modify = function(engine) { engine.x *= this.x; }
+                this.unmodify = function(engine) { engine.x /= this.x; }
+            }
+            
+            function Cached() {
+                modifier.Modifier.call(this, "cached");
+                
+                this.x = 0;
+                this.ox = 0;
+                
+                this.type = modifier.CACHED;
+                
+                this.modify = function(engine) {
+                    this.ox = engine.x;
+                    engine.x = this.x;
+                }
+                
+                this.unmodify = function(engine) {
+                    engine.x = this.ox;
+                }
+            
+            }            
+        </script>
+    </body>
+</html>

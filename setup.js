@@ -1,8 +1,32 @@
+/** Setup utilities. */
+var setup = function(hook) {
+
+    /* Check start function. */
+    if (hook || typeof main === "function") {
+
+        /* Load the engine. */
+        console.log("Loading dependencies from " + (setup.directory || "."));
+        var dependencies = setup.dependencies.map(function(file) { return file.replace("~", setup.directory); });
+        setup.require(dependencies, hook || main);
+        console.log("Loaded dependencies");
+
+    /* Otherwise. */
+    } else { console.error("No main function is defined"); }
+
+};
+
 /** Abstract Engine dependencies. */
+<<<<<<< HEAD
 var dependencies = ["resource.js", "vector.js", "particle.js", "animation.js", "sprite.js", "engine.js"];
+=======
+setup.dependencies = ["~geometry.js", "~callback.js", "~resource.js", "~modifier.js", "~input.js", "~engine.js", "~sprite.js"];
+
+/** Define the engine path. */
+setup.directory = "abstractengine/";
+>>>>>>> development
 
 /** Require a set of javascript files. */
-function require(files, callback) {
+setup.require = function(files, callback) {
     
     /* Set up ready hooks. */
     var ready = [];
@@ -10,8 +34,8 @@ function require(files, callback) {
     var and = function(a, b) { return a && b; };
     var check = function() {
         if (ready.indexOf(null) == -1 && !finished) {
-            callback(ready.reduce(and));
             finished = true;
+            callback(ready.reduce(and));
             console.log("Made callback from require");
         }
     };
@@ -39,26 +63,12 @@ function require(files, callback) {
     
 }
 
-/** Locate a member . */
-function locate(members) {
-    
-    /* Find each cross platform version of something. */
-    var w = window;
-    for (var i = 0; i < arguments.length; i++) {
-        var m = arguments[i];
-        w[m] = w[m] || w["webkit"+m] || w["moz"+m] || w["ms"+m];
-    }
-    
+/** Locate a cross platform function. */
+function locate(qualified, object) {
+    var n = qualified.split(/\./);
+    var l = n.pop(-1);
+    var o = object || window;
+    var u = function(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+    for (var i in n) o = o[n[i]];
+    return o[l] || o["webkit" + u(l)] || o["moz" + u(l)] || o["o" + u(l)];
 }
-
-/* Check start function. */
-if (typeof start === "function") {
-    
-    /* Load the engine. */
-    if (typeof ENGINE !== "string") var ENGINE = "";
-    dependencies = dependencies.map(function(file) { return ENGINE+file; });
-    require(dependencies, start);
-    console.log("Loaded dependencies");
-
-/* Otherwise. */
-} else { console.error("No start function is defined"); }

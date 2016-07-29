@@ -1,70 +1,54 @@
-/** Sprite sheet. */
-function Sheet(image, rows, columns) {
+/** General sprite utilities. */
+var sprite = {};
+
+/** Transform. */
+sprite.Transform = function Transform(x, y, r, v, w) {
     
-    /* Sheet information. */
-    this.image = image;
-    this.rows = rows || 1;
-    this.columns = columns || 1;
+    /** Basic transform information. */
+    this.position = new geometry.Vector(x || 0, y || 0);
+    this.rotation = r || 0;
+    this.scale = new geometry.Vector(v || 0, w || 0);
     
-    /** Get the current bbox. */
-    this.frame = function(index) {
-        var width = this.image.width / this.columns;
-        var height = this.image.height / this.rows;
-        var x = (index % this.columns) * width;
-        var y = (index / this.columns | 0) * height;
-        return [x, y, width, height];
-        console.log(x, y);
+    /** Combine two transforms. */
+    this.with = function(other) {
+        return new Transform(this.x + other.x, this.y + other.y, this.r + other.r, this.v * other.v, this.w * other.w);
     }
     
 }
 
-/* Main sprite. */
-function Sprite(engine, x, y, w, h, cx, cy) {
+/** Fancy property methods. */
+sprite.Transform.prototype = {
+    
+    /* Setters and getters for members. V and W are scale. */
+    get x() { return this.position.x; },
+    set x($) { this.position.x = $; },
+    get y() { return this.position.y; },
+    set y($) { this.position.y = $; },
+    get r() { return this.rotation; },
+    set r($) { this.rotation = $; },
+    get v() { return this.scale.x; },
+    set v($) { this.scale.x = $; },
+    get w() { return this.scale.y; },
+    set w($) { this.scale.y = $; }
+    
+}
 
-    /* Engine. */
-    this.engine = engine;
+/** The sprite class. */
+sprite.Sprite = function Sprite(x, y, w, h, c, d) {
     
-    /* Position (center). */
-    this.pos = new Vector(x || 0, y || 0);
-    this.cpos = new Vector(cx || w/2 || 0, cy || h/2 || 0);
-    
-    /* Rotation about the center. */
-    this.rot = 0;
-    
-    /* Size. */
+    /** Transform and center. */
+    this.transform = new sprite.Transform(x, y);
     this.width = w || 0;
     this.height = h || 0;
-    
-    /* Graphics. */
-    this.sheet;
-    
-    /* Animations. */
-    this.animations = {};
-    this.animation = "";
-    
-    /** Adds, checks, and gets animations. */
-    this.addAnimation = function(animation) { this.animations[animation.name] = animation; }
-    this.hasAnimation = function() { return this.animation in this.animations; }
-    this.getAnimation = function() { return this.animations[this.animation]; }
-    
-    /** Sets the spritesheet properties. */
-    this.setSheet = function(sheet) { this.sheet = sheet; }
-    
-    /** Moves sprite by the specified amount in each direction. */
-    this.translate = function(dx, dy) { this.pos.x += dx; this.pos.y += dy; }
+    this.center = c && d && new geometry.Vector(c, d);  // null if c or d are not defined
     
     /** Bounding box. */
-    this.bbox = function() {}
+    this.bbox = geometry.bbox;
     
-    /** Returns whether this sprite touches another one. */
-    this.touches = function(sprite) {}
-
-	/** Returns the top left point of the sprite. */
-	this.topLeft = function() { return this.pos.copy().sub(this.cpos) };
-	
-    /** Default update method. */
-    this.update = function(delta) {  if (this.hasAnimation()) this.getAnimation().update(); }
+    /** Update the sprite. */
+    this.update = function(delta) {}
     
+<<<<<<< HEAD
     /* Render the sprite. */
     this.render = function(context) {
         
@@ -102,3 +86,9 @@ function Sprite(engine, x, y, w, h, cx, cy) {
     }
     
 }
+=======
+    /** Render the sprite. */
+    this.render = function(context) {}
+
+}
+>>>>>>> development

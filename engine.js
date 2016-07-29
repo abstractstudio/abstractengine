@@ -1,28 +1,20 @@
-/* Determine the graphics request call. */
-locate("requestAnimationFrame");
-                         
-/* Key states. */
-var KEY = {PRESSED: 1, DOWN: 2, DEFAULT: [37, 39, 38, 40, 32], 
-           W: 87, A: 65, S: 83, D: 68, 
-           UP: 38, LEFT: 37, DOWN: 40, RIGHT: 39, 
-           C: 67, SPACE: 32,
-           ESCAPE: 27};
-
-/* The main engine class. */
+/** The main game engine. */
 function Engine(canvas) {
     
-    /* Graphical components. */
-    this.canvas = canvas;
-    if (canvas) this.context = canvas.getContext("2d");
-    
-    /* Input. */
-    this.keyboard = {};
-    this.mouse = {x: 0, y: 0};
-    
-    /* Resources and sprites. */
-    this.manager = new Manager();
+    /** Entities. */
     this.entities = {};
     
+    /** Managers. */
+    this.entities.resources = this.resources = new resource.Manager(this);
+    this.entities.callbacks = this.callbacks = new callback.Manager(this);
+    this.entities.modifiers = this.modifiers = new modifier.Manager(this);
+    this.entities.input = this.input = new input.Manager(this);
+    
+    /** Graphics. */
+    this.canvas = canvas;
+    this.context = canvas ? canvas.getContext("2d") : null;
+    
+<<<<<<< HEAD
     /* Engine loops. */
     this.showDisplay = true;
     this.updateLimit = 60;
@@ -103,72 +95,114 @@ function Engine(canvas) {
 		
         /* Particle demo */
 		this.particleSystem.update(delta);
+=======
+    /** Setup the engine. */
+    this.setup = function() {}
+    
+    /** Default auto update loop. */
+    this.update = function(delta) { 
+        
+        /* Update input. */
+        this.input.update(delta);
+        
+>>>>>>> development
     }
     
-    /* Render the canvas. */
+    /** Default auto render loop. */
     this.render = function(delta) {
         
         /* Clear the canvas. */
+<<<<<<< HEAD
 		this.context.fillStyle = "black";
 		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+=======
+        //this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.context.fillStyle = "white";
+        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+>>>>>>> development
         
-		/* Draw data. */
-		if (this.showDisplay) this.display();
-		
-        /* Draw the sprites. */
-        for (var name in this.entities) if (this.entities[name].autorender) this.entities[name].render(this.context);
+        /* Run the display. */
+        if (this.display.visible) this.display();
         
         /* Particle demo */
 		this.particleSystem.render(this.context);
     }
     
-    /* Call the update hook. */
-    this._update = function() {
+    /* Background update function. */
+    this._update = function() { 
         
         /* Get the delta. */
-        var delta = Date.now() - this.updateTime;
-        this.updateTime = Date.now();
+        var delta = Date.now() - this._update.time;
+        this._update.time = Date.now();
         
-        /* Call the function. */
+        /* Call the update. */
         this.update(delta);
         
     }
     
-    /* Call the render hook. */
+    /** Update timing. */
+    this._update.limit = 60;
+    this._update.interval = 1000 / this._update.limit;
+    this._update.time = 0;
+    
+    /* Background render function. */
     this._render = function() {
         
         /* Request another animation frame. */
         requestAnimationFrame(this._render.bind(this));
-    
-        /* Get the delta. */
-        var delta = Date.now() - this.renderTime;
         
-        /* Call the function. */
-        if (delta > this.renderInterval) {
-            this.render(delta);
-            this.renderTime = Date.now();
-            this.renderTimes.unshift(delta);
-            this.renderTimes.splice(-1);
-        }
+        /* Get the delta. */
+        var delta = Date.now() - this._render.time;
+        this._render.time = Date.now();
+        
+        /* Call render. */
+        this.render(delta);
+        
+        /* Track. */
+        this._render.history.unshift(delta);
+        this._render.history.splice(-1);
         
     }
     
-    /* Start the engine. */
+    /** Render timing. */
+    this._render.time = 0;
+    this._render.history = new Array(100);
+    
+    /** Display engine statistics. */
+    this.display = function() { 
+        
+        /* Draw the frames per second. */
+        var fps = this._render.history.map(function(x) { return 1000/x; }).reduce(function(a, b) { return a+b; }, 0) / this._render.history.length;
+        this.context.fillStyle = "black";
+        this.context.textAlign = "left";
+        this.context.textBaseline = "hanging";
+        this.context.font = "16px Verdana";
+        this.context.fillText(Math.round(fps) + " fps", 10, 10);
+        
+    }
+    
+    /** Display visibility. */
+    this.display.visible = true;
+    
+    /** Start the engine. */
     this.start = function() {
         
-        /* Load, setup and go! */
-        this.setup();
-        setInterval(this._update.bind(this), this.updateInterval);
+        /* Start loops. */
+        setInterval(this._update.bind(this), this._update.interval);
         this._render();
         
+        /* Only bind stop if started. */
+        var that = this;
+        document.addEventListener("beforeunload", function(e) { that.stop(); });
+        
     }
-	
-	/* Draw FPS. */
-	this.display = function() {
-		var fps = this.renderTimes.map(function(x) { return 1000/x; }).reduce(function(a, b) { return a+b; }, 0) / this.renderTimes.length;
-		this.context.textAlign = "left";
-		this.context.textBaseline = "hanging";
-		this.context.fillText(Math.round(fps) + " fps", 10, 10);
-	}
+    
+    /** Stop the engine. */
+    this.stop = function() {
+        
+        /* Tests and says goodbye. */
+        alert("Goodbye!");
+        
+    }
     
 }
