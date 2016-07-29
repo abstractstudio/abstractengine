@@ -58,3 +58,13 @@ setup.require = function(files, callback) {
     }
     
 }
+
+/** Locate a cross platform function. */
+function locate(qualified, object) {
+    var n = qualified.split(/\./);
+    var l = n.pop(-1);
+    var o = object || window;
+    var u = function(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
+    for (var i in n) o = o[n[i]];
+    return o[l] || o["webkit" + u(l)] || o["moz" + u(l)] || o["o" + u(l)];
+}
