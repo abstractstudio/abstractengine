@@ -75,10 +75,10 @@ resource.Manager = function Manager() {
     this.status = resource.CREATED;
     
     /** Add a resource to the job list. */
-    this.queue = function(name, path, type) {
+    this.queue = function(name, type, path) {
     
         /* Add the jobs by name. */
-        this.jobs.push(new resource.Resource(name, path, type));
+        this.jobs.push(new resource.Resource(name, type, path));
     
     }
     
