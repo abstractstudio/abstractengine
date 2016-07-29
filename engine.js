@@ -97,8 +97,7 @@ function Engine(canvas) {
     /** Start the engine. */
     this.start = function() {
         
-        /* Load, setup, and go! */
-        this.setup();
+        /* Start loops. */
         setInterval(this._update.bind(this), this._update.interval);
         this._render();
         
