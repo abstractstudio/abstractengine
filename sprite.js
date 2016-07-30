@@ -48,7 +48,6 @@ sprite.Sprite = function Sprite(x, y, w, h, c, d) {
     /** Update the sprite. */
     this.update = function(delta) {}
     
-<<<<<<< HEAD
     /* Render the sprite. */
     this.render = function(context) {
         
@@ -86,9 +85,3 @@ sprite.Sprite = function Sprite(x, y, w, h, c, d) {
     }
     
 }
-=======
-    /** Render the sprite. */
-    this.render = function(context) {}
-
-}
->>>>>>> development

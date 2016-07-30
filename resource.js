@@ -96,17 +96,9 @@ resource.Manager = function Manager() {
             var callback = function() {
                 
                 /* Check if all jobs are done. */
-<<<<<<< HEAD
-                for (var name in that.jobs) {
-                    if (that.jobs[name].status <= RESOURCE.LOADING) return;
-                    that.status = Math.max(that.status, that.jobs[name].status);
-                    that.jobs[name].content.oncanplaythrough = function() {};
-                    that.jobs[name].content.onerror = function() {};
-=======
                 for (var j in that.jobs) {
                     if (that.jobs[j].status <= resource.LOADING) return;
                     that.status = Math.max(that.status, that.jobs[j].status);
->>>>>>> development
                 }
 
                 /* Clear jobs. */

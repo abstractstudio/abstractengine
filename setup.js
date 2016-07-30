@@ -16,14 +16,11 @@ var setup = function(hook) {
 };
 
 /** Abstract Engine dependencies. */
-<<<<<<< HEAD
-var dependencies = ["resource.js", "vector.js", "particle.js", "animation.js", "sprite.js", "engine.js"];
-=======
 setup.dependencies = ["~geometry.js", "~callback.js", "~resource.js", "~modifier.js", "~input.js", "~engine.js", "~sprite.js"];
 
 /** Define the engine path. */
 setup.directory = "abstractengine/";
->>>>>>> development
+
 
 /** Require a set of javascript files. */
 setup.require = function(files, callback) {
