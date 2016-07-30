@@ -1,21 +1,14 @@
-/** Object callback management. */
-var callback = {};
+var asEventManager = (function() {
+    
+    this.eventListeners = {};
+    
+    this.addEventListener = function(type, listener) {
+        if (this.eventListeners[type] === undefined) this.eventListeners[type] = [];
+        this.eventListeners[type].push(listener);
+    }
+    
+    this.removeEventListener = function(type, listener) {
+        this.eventListeners[type].pop(this.eventListeners[type].indexOf(listener));
+    }
 
-/** Callback manager. */
-callback.Manager = function Manager() {
-    
-    /** The callback mappings. */
-    this.map = {};
-    
-    /** Register a function to an event. */
-    this.register = function(event, hook) {
-        if (this.map[event]) this.map[event].push(hook);
-        else this.map[event] = [hook];
-    }
-    
-    /** Raise an event. */
-    this.raise = this.$ = function(event, data) {
-        for (var i in this.map[event]) this.map[event][i](data);
-    }
-    
-}
+})();
