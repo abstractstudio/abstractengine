@@ -1,3 +1,5 @@
+'use strict';
+
 IMAGE = "image";
 AUDIO = "audio";
 ANIMATION = "animation";
@@ -18,15 +20,18 @@ var Asset = function(name, type, path) {
     
     this.load = function(listener) {
         this.status = LOADING;
+        var onload = function() { that.status = resource.LOADED; listener(); }
+        var onerror = function() { that.status = resource.FAILED; listener(); }
+        
         if (this.type == IMAGE) {
             this.content = new Image();
-            this.content.onload = function() { that.status = resource.LOADED; listener(); }
-            this.content.onerror = function() { that.status = resource.FAILED; listener(); }
+            this.content.onload = onload;
+            this.content.onerror = onerror;
             this.content.src = this.path;  
         } else if (this.type == AUDIO) {
             this.content = new Audio();
-            this.content.oncanplaythrough = function() { that.status = resource.LOADED; hook(); }
-            this.content.onerror = function() { that.status = resource.FAILED; hook(); }
+            this.content.oncanplaythrough = onload;
+            this.content.onerror = onerror;
             this.content.src = this.path;  
         }
         

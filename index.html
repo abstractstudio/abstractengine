@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>Engine Test</title>
+        <style>
+            body {
+                text-align: center; 
+                background-color: #DDD; 
+            }
+            canvas { 
+                border-radius: 0.5em; 
+                position: absolute; 
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+            }
+        </style>
+        <script type="text/javascript">
+            var engine;
+            function main() {
+                var canvas = document.getElementById("canvas");
+                engine = new Engine(canvas);
+                engine.main();
+            }
+        </script>
+    </head>
+    <body style="text-align: center; margin-top: 4em;">
+        <canvas width=800 height=600 id="canvas">HTML5 unavailable</canvas>
+        <script type="text/javascript" src="event.js"></script>
+        <script type="text/javascript" src="engine.js"></script>
+        <script type="text/javascript" src="animation.js"></script>
+        <script type="text/javascript">
+            main();
+        </script>
+    </body>
+</html>
