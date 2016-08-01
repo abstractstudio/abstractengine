@@ -96,7 +96,7 @@ CanvasRenderingContext2D.prototype["drawAnimation"] = function(animation, dx, dy
     var h = image.height / r;
     var x = (i % c) * w;
     var y = Math.floor(i / c) * h;
-    
+        
     this.drawImage(image, x, y, w, h, dx, dy, dWidth || w, dHeight || h);
 
 }

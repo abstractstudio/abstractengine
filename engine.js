@@ -15,7 +15,7 @@ cleanup()
 
 
 function Engine(canvas) {
-    
+        
     this.canvas = canvas;
     this.context = canvas.getContext("2d");
     
@@ -28,16 +28,29 @@ function Engine(canvas) {
     var renderTrackingIndex = 0;
     var renderHistory = new Array(this.renderTrackingCount);
     
-    this.a;
+    var setup = function() {
+        this.setup();
+        this.loadAssets(load);
+    }
     
-    var update = function() {   
+    var load = (function() {
+        this.load();
+        start();
+    }).bind(this);
+    
+    var start = (function() {
+        setInterval(update, this.updateInterval);
+        render();
+    }).bind(this);
+    
+    var update = (function() {   
         var delta = Date.now() - updateTime;
         updateTime = Date.now();
         this.update(delta);
-    }
+    }).bind(this);
     
-    var render = function() {
-        requestAnimationFrame(render.bind(this));
+    var render = (function() {
+        requestAnimationFrame(render);
         var delta = Date.now() - renderTime;
         renderTime = Date.now();
         this.render(delta);
@@ -46,46 +59,21 @@ function Engine(canvas) {
         renderTrackingIndex++;
         if (renderTrackingIndex == renderTrackingCount) 
             renderTrackingIndex = 0;
-    }
+    }).bind(this)
     
-    this.setup = function() {
-        this.queueAsset("player:knife:idle", ANIMATION, "assets/player/knife/move.png", {columns: 20});
-        var that = this;
-        this.loadAssets(function() { that.load(); });
-    }
+    this.setup = function() {}
     
-    this.load = function() {
-        this.a = this.getAsset("player:knife:idle");
-        this.a.play();
-        this.start();
-    }
-        
-    this.start = function() {
-        setInterval(update.bind(this), this.updateInterval);
-        render.call(this);
-    }
+    this.load = function() {}
     
     this.update = function(delta) {}
     
-    this.render = function(delta) {
-        this.context.fillStyle = "white";
-        this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        this.context.fillStyle = "black";
-        this.context.textAlign = "left";
-        this.context.textBaseline = "hanging";
-        this.context.font = "16px Verdana";
-        this.context.fillText(Math.floor(this.fps()) + " fps", 10, 10)
-        
-        this.context.drawAnimation(this.a, 50, 50);
-    }
+    this.render = function(delta) {}
     
     this.stop = function() {}
     
     this.cleanup = function() {}
     
-    this.main = function() {
-        this.setup();
-    }
+    this.main = function() { setup.call(this); }
     
     this.fps = function() {
         return renderHistory
