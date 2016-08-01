@@ -1,17 +1,19 @@
+'use strict';
+
 var asEventManager = (function() {
     
-    eventListeners = {};
+    var eventListeners = {};
     
-    addEventListener = function(type, listener) {
+    var addEventListener = function(type, listener) {
         if (this.eventListeners[type] === undefined) this.eventListeners[type] = [];
         this.eventListeners[type].push(listener);
     }
     
-    removeEventListener = function(type, listener) {
+    var removeEventListener = function(type, listener) {
         this.eventListeners[type].pop(this.eventListeners[type].indexOf(listener));
     }
     
-    raiseEvent = function(type, event) {
+    var raiseEvent = function(type, event) {
         var eventListeners;
         if ((eventListeners = this.eventListeners[type]) !== undefined)
             eventListeners.map(function(e) { e(event); });

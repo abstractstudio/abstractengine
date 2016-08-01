@@ -1,11 +1,15 @@
+'use strict';
+
 function Animation() {
+
+    var that = this;
 
     this._src;
     this.image;
     var interval;
 
-    this._rows = 0;
-    this._columns = 0;
+    this._rows = 1;
+    this._columns = 1;
     
     this.isPlaying = true;
     this.isReverse = false;
@@ -13,7 +17,7 @@ function Animation() {
     
     this.frameCount = 0;
     this.frameIndex = 0;
-    this.frameSpeed = 0;
+    this.frameSpeed = 40;
     this.startTime = 0;
         
     this._onload = function(e) { this.raiseEvent("load", e); this.onload(e); }
@@ -27,15 +31,15 @@ function Animation() {
     this.play = function(useInterval) {
         this.frameIndex = 0;
         this.isPlaying = true;
-        if (useInteval !== false)
+        if (useInterval !== false)
             interval = setInterval(function() { update(); }, this.frameSpeed);
     }
     
     var update = function() {
-        this.frameIndex++;
-        if (this.frameIndex + 1 == this.frameCount) {
-            if (!this.loop) this._onfinish();
-            else this.frameIndex = 0;
+        that.frameIndex++;
+        if (that.frameIndex == that.frameCount) {
+            if (!that.loop) that._onfinish();
+            else that.frameIndex = 0;
         }
     }
     
@@ -83,11 +87,17 @@ asEventManager.call(Animation.prototype);
 
 CanvasRenderingContext2D.prototype["drawAnimation"] = function(animation, dx, dy, dWidth, dHeight) {
     
+    var r = animation._rows;
+    var c = animation._columns;
+    var i = animation.frameIndex;
+    var image = animation.image;
     
-    var w = this.image.width / animation._columns;
-    var h = this.image.height / animation._rows;
+    var w = image.width / c;
+    var h = image.height / r;
+    var x = (i % c) * w;
+    var y = Math.floor(i / c) * h;
     
-    
+    this.drawImage(image, x, y, w, h, dx, dy, dWidth || w, dHeight || h);
 
 }
 

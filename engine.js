@@ -1,3 +1,5 @@
+'use strict';
+
 /*
 
 setup()
@@ -26,6 +28,8 @@ function Engine(canvas) {
     var renderTrackingIndex = 0;
     var renderHistory = new Array(this.renderTrackingCount);
     
+    this.a;
+    
     var update = function() {   
         var delta = Date.now() - updateTime;
         updateTime = Date.now();
@@ -44,9 +48,17 @@ function Engine(canvas) {
             renderTrackingIndex = 0;
     }
     
-    this.setup = function() {}
+    this.setup = function() {
+        this.queueAsset("player:knife:idle", ANIMATION, "assets/player/knife/move.png", {columns: 20});
+        var that = this;
+        this.loadAssets(function() { that.load(); });
+    }
     
-    this.load = function() {}
+    this.load = function() {
+        this.a = this.getAsset("player:knife:idle");
+        this.a.play();
+        this.start();
+    }
         
     this.start = function() {
         setInterval(update.bind(this), this.updateInterval);
@@ -63,6 +75,8 @@ function Engine(canvas) {
         this.context.textBaseline = "hanging";
         this.context.font = "16px Verdana";
         this.context.fillText(Math.floor(this.fps()) + " fps", 10, 10)
+        
+        this.context.drawAnimation(this.a, 50, 50);
     }
     
     this.stop = function() {}
@@ -71,8 +85,6 @@ function Engine(canvas) {
     
     this.main = function() {
         this.setup();
-        this.load();
-        this.start();
     }
     
     this.fps = function() {
@@ -85,4 +97,4 @@ function Engine(canvas) {
 }
 
 asEventManager.call(Engine.prototype);
-
+asAssetManager.call(Engine.prototype);
