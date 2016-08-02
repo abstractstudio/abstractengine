@@ -13,76 +13,66 @@ cleanup()
 
 */
 
-
-function Engine(canvas) {
+class Engine extends EngineControls {
         
-    this.canvas = canvas;
-    this.context = canvas.getContext("2d");
+    constructor(canvas) { 
+        super(canvas);
+        this.updateLimit = 60;
+        this.updateInterval = 1000 / this.updateLimit;
+        this.updateTime = 0;
+        this.renderTime = 0;
+        this.renderTrackingCount = 20;
+        this.renderTrackingIndex = 0;
+        this.renderHistory = new Array(this.renderTrackingCount);
+    }
     
-    this.updateLimit = 60;
-    this.updateInterval = 1000 / this.updateLimit;
-    
-    var updateTime = 0;
-    var renderTime = 0;
-    var renderTrackingCount = 20;
-    var renderTrackingIndex = 0;
-    var renderHistory = new Array(this.renderTrackingCount);
-    
-    var setup = (function() {
+    _setup() {
         this.setup();
-        this.loadAssets(function() { load(); console.log(5); });
-    }).bind(this);
+        this.loadAssets(() => { this._load(); });
+    }
     
-    var load = (function() {
+    _load() {
         this.load();
-        start();
-    }).bind(this);
+        this._start();
+    }
     
-    var start = (function() {
-        setInterval(update, this.updateInterval);
-        render();
-    }).bind(this);
+    _start() {
+        setInterval(this._update.bind(this), this.updateInterval);
+        this._render();
+    }
     
-    var update = (function() {   
-        var delta = Date.now() - updateTime;
-        updateTime = Date.now();
+    _update() {   
+        var delta = Date.now() - this.updateTime;
+        this.updateTime = Date.now();
         this.update(delta);
-    }).bind(this);
+    }
     
-    var render = (function() {
-        requestAnimationFrame(render);
-        var delta = Date.now() - renderTime;
-        renderTime = Date.now();
+    _render() {
+        requestAnimationFrame(this._render.bind(this));
+        var delta = Date.now() - this.renderTime;
+        this.renderTime = Date.now();
         this.render(delta);
         
-        renderHistory[renderTrackingIndex] = delta;
-        renderTrackingIndex++;
-        if (renderTrackingIndex == renderTrackingCount) 
-            renderTrackingIndex = 0;
-    }).bind(this)
+        this.renderHistory[this.renderTrackingIndex] = delta;
+        this.renderTrackingIndex++;
+        if (this.renderTrackingIndex == this.renderTrackingCount) 
+            this.renderTrackingIndex = 0;
+    }
     
-    this.setup = function() {}
+    setup() {}
+    load() {}
+    update(delta) {}
+    render(delta) {}
+    stop() {}
+    cleanup() {}
     
-    this.load = function() {}
+    main() { this._setup(); }
     
-    this.update = function(delta) {}
-    
-    this.render = function(delta) {}
-    
-    this.stop = function() {}
-    
-    this.cleanup = function() {}
-    
-    this.main = function() { setup.call(this); }
-    
-    this.fps = function() {
-        return renderHistory
+    fps() {
+        return this.renderHistory
             .map(function(x) { return 1000/x; })
             .reduce(function(a, b) { return a+b; }, 0) 
-            / renderTrackingCount
+            / this.renderTrackingCount
     }
     
 }
-
-asEventManager.call(Engine.prototype);
-asAssetManager.call(Engine.prototype);

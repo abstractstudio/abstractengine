@@ -1,90 +1,86 @@
 'use strict';
 
-function Animation() {
+class Animation extends EventManager {
 
-    this._src;
-    this.image;
-    var interval;
-
-    this._rows = 1;
-    this._columns = 1;
+    constructor() {
+        super();
+        this.image;
+        this._src;
+        this._interval;
+        this._rows = 1;
+        this._columns = 1;
     
-    this.isPlaying = true;
-    this.isReverse = false;
-    this.loop = true;
-    
-    this.frameCount = 0;
-    this.frameIndex = 0;
-    this.frameSpeed = 40;
-    this.startTime = 0;
-        
-    this._onload = function(e) { this.raiseEvent("load", e); this.onload(e); }
-    this._onerror = function(e) { this.raiseEvent("error", e); this.onerror(e); }
-    this._onfinish = function(e) { this.raiseEvent("finish", e); this.onfinish(e); }
-    
-    this.onload = function(e) {}
-    this.onerror = function(e) {}
-    this.onfinish = function(e) {}
-    
-    this.play = function(useInterval) {
-        this.frameIndex = 0;
         this.isPlaying = true;
-        if (useInterval !== false)
-            interval = setInterval(function() { update(); }, this.frameSpeed);
+        this.isReverse = false;
+        this.loop = true;
+    
+        this.frameCount = 0;
+        this.frameIndex = 0;
+        this.frameSpeed = 40;
+        this.startTime = 0;
     }
     
-    var update = (function() {
-        this.frameIndex++;
-        if (this.frameIndex == this.frameCount) {
-            if (!this.loop) this._onfinish();
-            else this.frameIndex = 0;
-        }
-    }).bind(this);
+    get src() { return url; }
+    set src(url) { return this.srcset(url); }
     
-    this.update = function() {
-        if (this.isPlaying) {
-            var now = Date.now();
-            if (now - this.start >= this.frameSpeed) {
-                this.start = now;
-                update();
-            }
-        }
-    }
+    get rows() { return this._rows; }
+    set rows(number) { this.frameCount = (this._rows = number) * this._columns; }
     
-    this.stop = function() {
-        if (interval) {
-            clearInterval(interval);
-            interval = null;
-        }
-    }
-
-}
-
-Animation.prototype = {
-
-    get src() { return url; },
-    set src(url) { return this.srcset(url); },
+    get columns() { return this._columns; }
+    set columns(number) { this.frameCount = (this._columns = number) * this._rows; }
     
+    get width() { return this.image.width / this._columns; }
+    get height() { return this.image.height / this._rows; }
+        
     srcset(url) {
         this._src = url;
         this.image = new Image();
         this.image.onload = this._onload.bind(this);
         this.image.onerror = this._onerror.bind(this);
         this.image.src = url;
-    },
+    }
+        
+    _onload(e) { this.fireEvent("load", e); this.onload(e); }
+    _onerror(e) { this.fireEvent("error", e); this.onerror(e); }
+    _onfinish(e) { this.fireEvent("finish", e); this.onfinish(e); }
     
-    get rows() { return this._rows; },
-    set rows(number) { this.frameCount = (this._rows = number) * this._columns; },
+    onload(e) {}
+    onerror(e) {}
+    onfinish(e) {}
     
-    get columns() { return this._columns; },
-    set columns(number) { this.frameCount = (this._columns = number) * this._rows; },
+    play(useInterval) {
+        this.frameIndex = 0;
+        this.isPlaying = true;
+        if (useInterval !== false)
+            this._interval = setInterval(() => { this._update(); }, this.frameSpeed);
+    }
     
-    get width() { return this.image.width / this._columns; },
-    get height() { return this.image.height / this._rows; },
-  
-};
+    _update() {
+        this.frameIndex++;
+        if (this.frameIndex == this.frameCount) {
+            if (!this.loop) this._onfinish();
+            else this.frameIndex = 0;
+        }
+    }
+    
+    update() {
+        if (this.isPlaying) {
+            var now = Date.now();
+            if (now - this.start >= this.frameSpeed) {
+                this.start = now;
+                this._update();
+            }
+        }
+    }
+    
+    stop() {
+        if (this._interval) {
+            clearInterval(this._interval);
+            this._interval = null;
+        }
+    }
 
-asEventManager.call(Animation.prototype);
+}
 
 CanvasRenderingContext2D.prototype["drawAnimation"] = function(animation, dx, dy, dWidth, dHeight) {
     
