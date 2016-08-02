@@ -30,7 +30,7 @@ function Engine(canvas) {
     
     var setup = function() {
         this.setup();
-        this.loadAssets(load);
+        this.loadAssets(function() { load(); });
     }
     
     var load = (function() {

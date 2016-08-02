@@ -2,8 +2,6 @@
 
 function Animation() {
 
-    var that = this;
-
     this._src;
     this.image;
     var interval;
@@ -35,13 +33,13 @@ function Animation() {
             interval = setInterval(function() { update(); }, this.frameSpeed);
     }
     
-    var update = function() {
-        that.frameIndex++;
-        if (that.frameIndex == that.frameCount) {
-            if (!that.loop) that._onfinish();
-            else that.frameIndex = 0;
+    var update = (function() {
+        this.frameIndex++;
+        if (this.frameIndex == this.frameCount) {
+            if (!this.loop) this._onfinish();
+            else this.frameIndex = 0;
         }
-    }
+    }).bind(this);
     
     this.update = function() {
         if (this.isPlaying) {
@@ -80,6 +78,9 @@ Animation.prototype = {
     
     get columns() { return this._columns; },
     set columns(number) { this.frameCount = (this._columns = number) * this._rows; },
+    
+    get width() { return this.image.width / this._columns; },
+    get height() { return this.image.height / this._rows; },
   
 };
 
