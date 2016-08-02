@@ -59,6 +59,7 @@ var asAssetManager = (function() {
     }
     
     var loadAssets = function(listener) {
+        
         var that = this;
         
         for (var i in this.assetJobs) {
@@ -70,7 +71,7 @@ var asAssetManager = (function() {
                     that.status = Math.max(that.status, that.assetJobs[j].status);
                 }
                 that.assetJobs = [];
-                listener();   
+                listener();
             }
             
             this.assetMap[assetJob.name] = assetJob;

@@ -28,10 +28,10 @@ function Engine(canvas) {
     var renderTrackingIndex = 0;
     var renderHistory = new Array(this.renderTrackingCount);
     
-    var setup = function() {
+    var setup = (function() {
         this.setup();
-        this.loadAssets(function() { load(); });
-    }
+        this.loadAssets(function() { load(); console.log(5); });
+    }).bind(this);
     
     var load = (function() {
         this.load();
