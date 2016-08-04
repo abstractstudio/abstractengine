@@ -13,7 +13,7 @@ cleanup()
 
 */
 
-class Engine extends EngineControls {
+class Engine extends EngineInput {
         
     constructor(canvas) { 
         super(canvas);

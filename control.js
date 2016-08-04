@@ -1,4 +1,4 @@
-class EngineControls extends InputManager {
+class EngineControls extends AssetManager {
 
     constructor(canvas) {
         super();
