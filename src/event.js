@@ -1,5 +1,7 @@
 'use strict';
 
+goog.provide("event.EventManager");
+
 class EventManager {
     
     constructor() {

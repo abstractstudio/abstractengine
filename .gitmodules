@@ -1,0 +1,3 @@
+[submodule "buildjs"]
+	path = buildjs
+	url = https://github.com/abstractstudio/buildjs

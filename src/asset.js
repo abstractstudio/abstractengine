@@ -1,5 +1,9 @@
 'use strict';
 
+goog.require("event.EventManager");
+goog.provide("asset.Asset");
+goog.provide("asset.AssetManager");
+
 const IMAGE = "image";
 const AUDIO = "audio";
 const ANIMATION = "animation";
@@ -63,6 +67,9 @@ class AssetManager extends EventManager {
     
     loadAssets(listener) {
         var that = this;
+        
+        if (this.assetJobs.length == 0)
+            listener();
         
         for (var i in this.assetJobs) {
             var assetJob = this.assetJobs[i];

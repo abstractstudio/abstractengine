@@ -1,12 +1,15 @@
 'use strict';
 
+goog.require("event.EventManager");
+goog.provide("animation.Animation");
+
 class Animation extends EventManager {
 
     constructor() {
         super();
-        this.image;
-        this._src;
-        this._interval;
+        this.image = null;
+        this._src = null;
+        this._interval = null;
         this._rows = 1;
         this._columns = 1;
     

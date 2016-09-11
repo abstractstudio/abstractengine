@@ -13,6 +13,9 @@ cleanup()
 
 */
 
+goog.require("input.EngineInput");
+goog.provide("engine.Engine");
+
 class Engine extends EngineInput {
         
     constructor(canvas) { 
@@ -51,7 +54,7 @@ class Engine extends EngineInput {
         requestAnimationFrame(this._render.bind(this));
         var delta = Date.now() - this.renderTime;
         this.renderTime = Date.now();
-        this.render(delta);
+        this.render(this.context);
         
         this.renderHistory[this.renderTrackingIndex] = delta;
         this.renderTrackingIndex++;
