@@ -23,7 +23,7 @@ class EngineInput extends EngineControls {
         
         this._isMouseCaptured = false;
         this._isMouseCapturing = false;
-        this._useMouseCapture = true;
+        this._useMouseCapture = false;
         
         document.addEventListener("keydown", (e) => { this._onKeyDown(e); });
         document.addEventListener("keyup", this._onKeyUp.bind(this));
