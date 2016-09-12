@@ -54,8 +54,7 @@ class Engine extends EngineInput {
         requestAnimationFrame(this._render.bind(this));
         var delta = Date.now() - this.renderTime;
         this.renderTime = Date.now();
-        this.render(this.context);
-        
+        this.render(this.context, this.canvas);
         this.renderHistory[this.renderTrackingIndex] = delta;
         this.renderTrackingIndex++;
         if (this.renderTrackingIndex == this.renderTrackingCount) 
@@ -65,7 +64,7 @@ class Engine extends EngineInput {
     setup() {}
     load() {}
     update(delta) {}
-    render(delta) {}
+    render(context, canvas) {}
     stop() {}
     cleanup() {}
     
