@@ -1,8 +1,6 @@
-'use strict';
-
-goog.require("event.EventManager");
-goog.provide("asset.Asset");
-goog.provide("asset.AssetManager");
+goog.require("engine.EventManager");
+goog.provide("engine.Asset");
+goog.provide("engine.AssetManager");
 
 const IMAGE = "image";
 const AUDIO = "audio";

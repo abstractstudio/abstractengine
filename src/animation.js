@@ -1,7 +1,5 @@
-'use strict';
-
-goog.require("event.EventManager");
-goog.provide("asset.Animation");
+goog.require("engine.EventManager");
+goog.provide("engine.Animation");
 
 class Animation extends EventManager {
 

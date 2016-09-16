@@ -1,5 +1,5 @@
-goog.require("asset.AssetManager");
-goog.provide("control.EngineControls");
+goog.require("engine.AssetManager");
+goog.provide("engine.EngineControls");
 
 class EngineControls extends AssetManager {
 

@@ -1,19 +1,4 @@
-'use strict';
-
-/*
-
-setup()
-load()
-main()
-  start()
-    update()
-    render()
-  stop()
-cleanup()
-
-*/
-
-goog.require("input.EngineInput");
+goog.require("engine.EngineInput");
 goog.provide("engine.Engine");
 
 class Engine extends EngineInput {

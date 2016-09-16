@@ -1,6 +1,4 @@
-'use strict';
-
-goog.provide("event.EventManager");
+goog.provide("engine.EventManager");
 
 class EventManager {
     
