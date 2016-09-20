@@ -6,6 +6,7 @@ class Animation extends EventManager {
     constructor() {
         super();
         this.image = null;
+        this.name = null;
         this._src = null;
         this._interval = null;
         this._rows = 1;
@@ -62,6 +63,10 @@ class Animation extends EventManager {
             if (!this.loop) this._onfinish();
             else this.frameIndex = 0;
         }
+    }
+    
+    frame(index) {
+        this.frameIndex = index % this.frameCount;
     }
     
     update() {

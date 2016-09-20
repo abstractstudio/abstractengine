@@ -25,7 +25,7 @@ class Engine extends EngineInput {
     }
     
     _start() {
-        setInterval(this._update.bind(this), this.updateInterval);
+        setInterval(() => this._update(), this.updateInterval);
         this._render();
     }
     

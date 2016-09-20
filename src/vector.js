@@ -8,39 +8,16 @@ class Vector {
         this.y = y || 0;
     }
     
-    add(vec) { 
-        this.x += vec.x;
-        this.y += vec.y;
-        return this;
-    }
-    
-    sub(vec) {
-        this.x -= vec.x;
-        this.y -= vec.y;
-        return this;
-    }
-    
-    scale(f) {
-        this.x *= f;
-        this.y *= f;
-        return this;
-    }
-    
-    dotdot() {
-        return this.dot(this);
-    }
-    
-    magnitude() {
-        return Math.sqrt(this.dotdot());
-    }
+    add(vec) { this.x += vec.x; this.y += vec.y; return this; }
+    sub(vec) { this.x -= vec.x; this.y -= vec.y; return this; }
+    scale(f) { this.x *= f; this.y *= f; return this; }
+    dot(vec) { return this.x * vec.x + this.y * vec.y; }
+    dotdot() { return this.dot(this); }
+    magnitude() { return Math.sqrt(this.dotdot()); }
     
     normalize() {
         this.scale(1/this.magnitude());
         return this;
-    }
-    
-    dot(vec) {
-        return this.x * vec.x + this.y * vec.y;
     }
     
     copy() {
@@ -55,4 +32,5 @@ class Vector {
     static distance(a, b) {
         return Math.sqrt((b.x-a.x)*(b.x-a.x) + (b.y-a.y)*(b.y-a.y));
     }
+    
 }

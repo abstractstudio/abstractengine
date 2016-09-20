@@ -2,9 +2,9 @@ goog.require("engine.EventManager");
 goog.provide("engine.Asset");
 goog.provide("engine.AssetManager");
 
-const IMAGE = "image";
-const AUDIO = "audio";
-const ANIMATION = "animation";
+window.IMAGE = "image";
+window.AUDIO = "audio";
+window.ANIMATION = "animation";
 const CREATED = 0;
 const LOADING = 1;
 const LOADED = 2;
@@ -30,16 +30,21 @@ class Asset {
             this.content = new Image();
             this.content.onload = onload;
             this.content.onerror = onerror;
+            this.content.renderable = true;
         } else if (this.type == AUDIO) {
             this.content = new Audio();
             this.content.oncanplaythrough = onload;
             this.content.onerror = onerror;
+            this.content.renderable = false;
         } else if (this.type == ANIMATION) {
             this.content = new Animation();
             this.content.onload = onload;
             this.content.onerror = onerror;
+            this.content.renderable = true;
         }
 
+        this.content.name = this.name;
+        this.content.type = this.type;
         for (var key in this.options)
             if (this.options.hasOwnProperty(key))
                 this.content[key] = this.options[key];
