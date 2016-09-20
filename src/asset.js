@@ -30,17 +30,17 @@ class Asset {
             this.content = new Image();
             this.content.onload = onload;
             this.content.onerror = onerror;
-            this.content.renderable = true;
+            this.content.isRenderable = true;
         } else if (this.type == AUDIO) {
             this.content = new Audio();
             this.content.oncanplaythrough = onload;
             this.content.onerror = onerror;
-            this.content.renderable = false;
+            this.content.isRenderable = false;
         } else if (this.type == ANIMATION) {
             this.content = new Animation();
             this.content.onload = onload;
             this.content.onerror = onerror;
-            this.content.renderable = true;
+            this.content.isRenderable = true;
         }
 
         this.content.name = this.name;

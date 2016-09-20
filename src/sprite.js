@@ -19,15 +19,31 @@ class Sprite {
         this.height = h || 0;
 
         /* Animations. */
-        this.assets = {};
-        this.renderable = null;
+        this._assets = {};
+        this._renderable = null;
     
     }
     
-    /** Adds, checks, and gets animations. */
-    addAsset(asset) { this.assets[name || asset.name] = asset; }
-    hasRenderable() { return this.renderable != null; }
-    setRenderable(name) { this.renderable = this.assets[name].renderable && this.assets[name] || null; }
+    /** Add an asset to a keyword with a second argument. Otherwise get. */
+    addAsset(name, asset) { 
+        if (typeof(name) == "object" && asset == undefined)
+            this._assets[name.name] = name;
+        if (typeof(name) == "string" && asset != undefined) 
+            return this._assets[name] = asset;
+    }
+    
+    getAsset(name) {
+        return this._assets[name];
+    }
+
+    /** Set or replace the current renderable. */
+    setRenderable(renderable) {
+        return this._renderable = renderable;
+    }
+    
+    getRenderable() {
+        return this._renderable;
+    }
     
     /** Moves sprite by the specified amount in each direction. */
     translate(dx, dy) { this.pos.x += dx; this.pos.y += dy; }
@@ -51,10 +67,10 @@ class Sprite {
         context.translate(-this.pos.x, -this.pos.y);
 
         /* If there is an active animation. */
-        if (this.hasRenderable()) {
+        var r;
+        if (r = this.renderable()) {
 
             /* Create the clip, center, and draw. */
-            var r = this.renderable;
             var c = this.pos;
 
             if (r.type == "image") 
