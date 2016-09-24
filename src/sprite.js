@@ -53,6 +53,9 @@ class Sprite {
     
     /** Returns whether this sprite touches another one. (not implemented) */
     touches(sprite) {}
+    
+    /** Returns the top left corner of the sprite. */
+    topLeft() { return this.pos.copy().sub(this.center) };
 
     /** Default update method. */
     update(delta) {}

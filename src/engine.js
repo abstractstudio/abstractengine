@@ -1,4 +1,6 @@
 goog.require("engine.EngineInput");
+goog.require("engine.KEY");
+goog.require("engine.BUTTON");
 goog.provide("engine.Engine");
 
 class Engine extends EngineInput {
