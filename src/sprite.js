@@ -58,17 +58,17 @@ class Sprite {
     update(delta) {}
     
     /* Render the sprite. */
-    render(context) {
+    render(context, canvas) {
         
         /* Save and transform the canvas. */
         context.save();
         context.translate(this.pos.x, this.pos.y);
         context.rotate(-this.rot);
-        context.translate(-this.pos.x, -this.pos.y);
+        context.translate(-this.pos.x-this.center.x, -this.pos.y-this.center.y);
 
         /* If there is an active animation. */
         var r;
-        if (r = this.renderable()) {
+        if (r = this.getRenderable()) {
 
             /* Create the clip, center, and draw. */
             var c = this.pos;

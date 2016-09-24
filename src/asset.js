@@ -46,7 +46,7 @@ class Asset {
         this.content.name = this.name;
         this.content.type = this.type;
         for (var key in this.options)
-            if (this.options.hasOwnProperty(key))
+            if (this.options.hasOwnProperty(key)) 
                 this.content[key] = this.options[key];
             
         this.content.src = this.path;

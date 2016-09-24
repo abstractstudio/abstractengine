@@ -15,16 +15,19 @@ class Engine extends EngineInput {
     }
     
     _setup() {
+        console.log("Setting up.")
         this.setup();
         this.loadAssets(() => { this._load(); });
     }
     
     _load() {
+        console.log("Loaded resources.");
         this.load();
         this._start();
     }
     
     _start() {
+        console.log("Starting the engine.");
         setInterval(() => this._update(), this.updateInterval);
         this._render();
     }

@@ -26,7 +26,7 @@ class Animation extends EventManager {
     set src(url) { return this.srcset(url); }
     
     get rows() { return this._rows; }
-    set rows(number) { this.frameCount = (this._rows = number) * this._columns; }
+    set rows(number) { console.log(number); this.frameCount = (this._rows = number) * this._columns; }
     
     get columns() { return this._columns; }
     set columns(number) { this.frameCount = (this._columns = number) * this._rows; }
