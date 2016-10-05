@@ -1,8 +1,9 @@
-export { EventManager };
+goog.provide("abstract.event.EventManagerMixin");
 
-class EventManager {
+EventManagerMixin = (superclass) => class extends superclass {
     
     constructor() {
+        super();
         this.eventListeners = {};
     }
     
