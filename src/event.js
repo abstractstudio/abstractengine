@@ -1,4 +1,4 @@
-goog.provide("engine.EventManager");
+export { EventManager };
 
 class EventManager {
     
@@ -6,19 +6,23 @@ class EventManager {
         this.eventListeners = {};
     }
     
-    addEventListener(type, listener) {
-        if (this.eventListeners[type] === undefined) this.eventListeners[type] = [];
-        this.eventListeners[type].push(listener);
+    addEventListener(event, listener) {
+        if (this.eventListeners[event] === undefined)
+            this.eventListeners[event] = [listener];
+        else this.eventListeners[event].push(listener);
     }
     
-    removeEventListener(type, listener) {
-        this.eventListeners[type].pop(this.eventListeners[type].indexOf(listener));
+    removeEventListener(event, listener) {
+        if (this.eventListeners[event] !== undefined) {
+            var i = this.eventListeners[event].indexOf(listener);
+            return this.eventListeners[event].splice(i, i+1);
+        }
     }
     
-    fireEvent(type, event) {
-        var eventListeners;
-        if ((eventListeners = this.eventListeners[type]) !== undefined)
-            eventListeners.map(function(e) { e(event); });
+    fireEvent(event, data) {
+        var eventListeners = this.eventListeners[event];
+        if (eventListeners !== undefined)
+            eventListeners.map(function(listener) { listener(data); });
     }
 
 }
