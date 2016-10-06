@@ -1,9 +1,8 @@
-goog.provide("abstract.event.EventManagerMixin");
+goog.provide("abstract.event.EventManager");
 
-EventManagerMixin = (superclass) => class extends superclass {
+class EventManager {
     
     constructor() {
-        super();
         this.eventListeners = {};
     }
     

@@ -14,6 +14,7 @@ class Base {...}
 var Mixin = (superclass) => class extends superclass {...}
 class Class extends mix(Base, Mixin, ...) {...}
 */
+
 function mix(superclass, ...mixins) {
     return mixins.reduce((c, mixin) => mixin(c), this.superclass);
 }
