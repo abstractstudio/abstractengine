@@ -21,10 +21,10 @@ class InputManager extends EventManager {
         
         this.mouse = {x: 0, y: 0};
         this.keyboard = {};
+        this.capturing = true;
         
         this._captured = false;
         this._capturing = false;
-        this.enabled = true;
         
         document.addEventListener("keydown", (e) => { this.onKeyDown(e); });
         document.addEventListener("keyup", this.onKeyUp.bind(this));
@@ -32,16 +32,8 @@ class InputManager extends EventManager {
         document.addEventListener("mouseup", this.onMouseUp.bind(this));  
         document.addEventListener("mousemove", this.onMouseMove.bind(this));
         
-        if (this.enabled) {
-            this.canvas.addEventListener("mousedown", (e) => { 
-                if (!this._captured) this.capture(); 
-            }, false);
-            document.addEventListener("pointerlockchange", (e) => { 
-                if (this._capturing) this._capturing = false;
-                else this.release(true);
-            }, false);
-        }
-              
+        this.canvas.addEventListener("mousedown", this.onMouseDownLock.bind(this), false);
+        document.addEventListener("pointerlockchange", this.onPointerLockChange.bind(this), false);
     }
     
     get captured() {
@@ -53,12 +45,25 @@ class InputManager extends EventManager {
         this._capturing = true;
         this.canvas.requestPointerLock(); 
         this._captured = true;
+        console.log("capture");
     }
     
     release(alreadyReleased) { 
         if (!this._captured) return;
         //this.canvas.exitPointerLock();  // done by browser
         this._captured = false;
+        console.log("release");
+    }
+    
+    onMouseDownLock(e) { 
+        if (!this.capturing) return;
+        if (!this._captured) this.capture(); 
+    }
+    
+    onPointerLockChange(e) {
+        if (!this.capturing) return;
+        if (this._capturing) this._capturing = false;
+        else this.release(true);
     }
     
     onKeyDown(e) {

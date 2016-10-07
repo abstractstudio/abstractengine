@@ -12,6 +12,14 @@ class EngineFramework extends EventManager {
         this.canvas = canvas;
     }
     
+    setup() {}
+    start() {}
+    update() {}
+    render() {}
+    stop() {}
+    cleanup() {}
+    main() {}
+    
 }
 
 class EngineMachine extends EngineFramework {
