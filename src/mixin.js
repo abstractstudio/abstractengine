@@ -1,4 +1,4 @@
-goog.provide("abstract.mixin.mix");
+goog.provide("engine.mix");
 
 /** Create a superclass with mixins.
 

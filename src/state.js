@@ -1,9 +1,10 @@
-goog.require("abstract.event.EventManager");
-goog.provide("abstract.state.State");
+goog.require("engine.EventManager");
+goog.provide("engine.State");
 
 class State extends EventManager {
     
     constructor(name) {
+        super();
         this.name = name;
     }
     

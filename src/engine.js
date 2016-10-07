@@ -1,8 +1,9 @@
-goog.require("abstract.event.EventManager");
-goog.require("abstract.asset.AssetManager");
-goog.require("abstract.input.InputManager");
-goog.require("abstract.scripting.ScriptManager");
-goog.require("abstract.entities.EntityManager");
+goog.require("engine.EventManager");
+goog.require("engine.AssetManager");
+goog.require("engine.InputManager");
+//goog.require("abstract.scripting.ScriptManager");
+//goog.require("engine.EntityManager");
+goog.provide("engine.Engine");
 
 class EngineFramework extends EventManager {
     
@@ -21,7 +22,7 @@ class EngineMachine extends EngineFramework {
         this.states = {};
     }
     
-    connect(state, state, transition) {}
+    connect(from, to, transition) {}
     
 }
 
@@ -31,8 +32,8 @@ class Engine extends EngineFramework {
         super(canvas);
         this.assets = new AssetManager(this);
         this.input = new InputManager(this);
-        this.scripting = new ScriptManager(this);
-        this.entities = new EntityManager(this);
+        //this.scripting = new ScriptManager(this);
+        //this.entities = new EntityManager(this);
         this.setup();
     }
     
@@ -58,6 +59,10 @@ class Engine extends EngineFramework {
     
     cleanup() {
         
+    }
+    
+    main() {
+    
     }
     
 }

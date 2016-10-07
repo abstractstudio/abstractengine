@@ -2,9 +2,9 @@ goog.require("engine.EventManager");
 goog.provide("engine.Asset");
 goog.provide("engine.AssetManager");
 
-window.IMAGE = "image";
-window.AUDIO = "audio";
-window.ANIMATION = "animation";
+const IMAGE = "image";
+const AUDIO = "audio";
+const ANIMATION = "animation";
 const CREATED = 0;
 const LOADING = 1;
 const LOADED = 2;
@@ -22,7 +22,6 @@ class Asset {
     }
     
     load(listener) {
-    
         this.status = LOADING;
         var onload = () => { this.status = LOADED; listener(); }
         var onerror = () => { this.status = FAILED; listener(); }
@@ -43,15 +42,13 @@ class Asset {
             this.content.onerror = onerror;
             this.content.isRenderable = true;
         }
-
+        
         this.content.name = this.name;
         this.content.type = this.type;
         for (var key in this.options)
             if (this.options.hasOwnProperty(key)) 
                 this.content[key] = this.options[key];
-            
-        this.content.src = this.path;
-                
+        this.content.src = this.path;   
     }
     
 }
@@ -60,42 +57,36 @@ class AssetManager extends EventManager {
     
     constructor() {
         super();
-        this.assetJobs = [];
-        this.assetMap = {};
-        this.assetStatus = CREATED;
+        this.jobs = [];
+        this.map = {};
+        this.status = CREATED;
     }
     
-    queueAsset(name, type, path, options) {
-        this.assetJobs.push(new Asset(name, type, path, options));    
+    queue(name, type, path, options) {
+        this.jobs.push(new Asset(name, type, path, options));    
     }
     
-    loadAssets(listener) {
-    
+    load(listener) {
         var that = this;
-        
-        if (this.assetJobs.length == 0)
+        if (this.jobs.length == 0)
             listener();
-        
-        for (var i in this.assetJobs) {
-            var assetJob = this.assetJobs[i];
+        for (var i in this.jobs) {
+            var job = this.jobs[i];
             var callback = () => {
-                for (var j in this.assetJobs) {
-                    if (this.assetJobs[j].status <= LOADING) return;
-                    this.status = Math.max(this.status, this.assetJobs[j].status);
+                for (var j in this.jobs) {
+                    if (this.jobs[j].status <= LOADING) return;
+                    this.status = Math.max(this.status, this.jobs[j].status);
                 }
-                this.assetJobs = [];
+                this.jobs = [];
                 listener();
             }
-            
-            this.assetMap[assetJob.name] = assetJob;
-            assetJob.load(callback);
-        
+            this.map[job.name] = job;
+            job.load(callback);
         }
-    
     }
     
-    getAsset(name) {
-        if (name in this.assetMap) return this.assetMap[name].content;
+    get(name) {
+        if (name in this.map) return this.map[name].content;
         return undefined;   
     }
    

@@ -1,4 +1,4 @@
-goog.provide("abstract.event.EventManager");
+goog.provide("engine.EventManager");
 
 class EventManager {
     
