@@ -7,7 +7,9 @@ class State extends EventManager {
         this.name = name;
     }
     
+    start() {}
     update(delta) {}
     render(context, canvas) {}
+    stop() {}
     
 }

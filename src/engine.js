@@ -13,15 +13,26 @@ class EngineFramework extends EventManager {
     
 }
 
+class EngineMachine extends EngineFramework {
+    
+    constructor(canvas) {
+        super(canvas);
+        this.state = null;
+        this.states = {};
+    }
+    
+    connect(state, state, transition) {}
+    
+}
+
 class Engine extends EngineFramework {
     
-    constructor(canvas, state) {
+    constructor(canvas) {
         super(canvas);
         this.assets = new AssetManager(this);
         this.input = new InputManager(this);
         this.scripting = new ScriptManager(this);
         this.entities = new EntityManager(this);
-        this.state = new State(this);
         this.setup();
     }
     
@@ -30,7 +41,7 @@ class Engine extends EngineFramework {
     }
     
     start() {
-        
+    
     }
     
     update(delta) {
