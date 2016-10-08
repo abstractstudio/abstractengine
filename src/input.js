@@ -69,7 +69,7 @@ class InputManager extends EventManager {
     }
     
     onReload(e) {
-        return true;
+        return this.preventReloadEnabled || null;
     }
     
     onKeyDown(e) {
