@@ -21,12 +21,13 @@ class InputManager extends EventManager {
         
         this.mouse = {x: 0, y: 0};
         this.keyboard = {};
-        this.capturing = true;
+        this.captureMouseEnabled = true;
+        this.preventReloadEnabled = false;  // For development purposes
         
         this._captured = false;
         this._capturing = false;
         
-        document.addEventListener("keydown", (e) => { this.onKeyDown(e); });
+        document.addEventListener("keydown", this.onKeyDown.bind(this));
         document.addEventListener("keyup", this.onKeyUp.bind(this));
         document.addEventListener("mousedown", this.onMouseDown.bind(this));
         document.addEventListener("mouseup", this.onMouseUp.bind(this));  
@@ -34,13 +35,14 @@ class InputManager extends EventManager {
         
         this.canvas.addEventListener("mousedown", this.onMouseDownLock.bind(this), false);
         document.addEventListener("pointerlockchange", this.onPointerLockChange.bind(this), false);
+        window.onbeforeunload = this.onReload.bind(this);
     }
     
-    get captured() {
+    get isCaptured() {
         return this._captured;
     }
     
-    capture() { 
+    captureMouse() { 
         if (this._captured) return;
         this._capturing = true;
         this.canvas.requestPointerLock(); 
@@ -48,7 +50,7 @@ class InputManager extends EventManager {
         console.log("capture");
     }
     
-    release(alreadyReleased) { 
+    releaseMouse(alreadyReleased) { 
         if (!this._captured) return;
         //this.canvas.exitPointerLock();  // done by browser
         this._captured = false;
@@ -56,14 +58,18 @@ class InputManager extends EventManager {
     }
     
     onMouseDownLock(e) { 
-        if (!this.capturing) return;
-        if (!this._captured) this.capture(); 
+        if (!this.captureMouseEnabled) return;
+        if (!this._captured) this.captureMouse(); 
     }
     
     onPointerLockChange(e) {
-        if (!this.capturing) return;
+        if (!this.captureMouseEnabled) return;
         if (this._capturing) this._capturing = false;
-        else this.release(true);
+        else this.releaseMouse(true);
+    }
+    
+    onReload(e) {
+        return true;
     }
     
     onKeyDown(e) {
