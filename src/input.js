@@ -47,6 +47,7 @@ class InputManager extends EventManager {
         this._capturing = true;
         this.canvas.requestPointerLock(); 
         this._captured = true;
+        this.fireEvent("capturemouse");
         console.log("capture");
     }
     
@@ -54,6 +55,7 @@ class InputManager extends EventManager {
         if (!this._captured) return;
         //this.canvas.exitPointerLock();  // done by browser
         this._captured = false;
+        this.fireEvent("releasemouse");
         console.log("release");
     }
     
@@ -69,6 +71,7 @@ class InputManager extends EventManager {
     }
     
     onReload(e) {
+        this.fireEvent("attemptreload");
         return this.preventReloadEnabled || null;
     }
     
