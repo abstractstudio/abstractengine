@@ -34,6 +34,7 @@ class StateManager extends EventManager {
     constructor(engine) {
         super();
         this.engine = engine;
+        this.engine.managers.states = this;
         this.states = {};
         this.engine.state = null;
     }

@@ -5,11 +5,17 @@ goog.require("engine.InputManager");
 //goog.require("engine.EntityManager");
 goog.provide("engine.Engine");
 
-class EngineFramework extends EventManager {
+
+class Engine extends EventManager {
     
     constructor(canvas) {
         super();
         this.canvas = canvas;
+        this.managers = {};
+        this.game = null;
+        this.assets = new AssetManager(this);
+        this.input = new InputManager(this);
+        this.states = new StateManager(this);
         this.updateLimit = 60;
         this.updateInterval = 1000 / this.updateLimit;
         this.updateTime = 0;
@@ -17,17 +23,16 @@ class EngineFramework extends EventManager {
         this.renderTrackingCount = 20;
         this.renderTrackingIndex = 0;
         this.renderHistory = new Array(this.renderTrackingCount);
-        this._setup();
     }
     
     _setup() {
         console.log("Running setup.")
         this.setup();
+        this.assets.load(this._load.bind(this));
     }
     
     _load() {
         console.log("Loading the engine.");
-        this.load();
         this._start();
     }
     
@@ -37,10 +42,11 @@ class EngineFramework extends EventManager {
         this._render();
     }
     
-    _update() {   
+    _update() {
         var delta = Date.now() - this.updateTime;
         this.updateTime = Date.now();
         this.update(delta);
+        this.input.update(delta);
     }
     
     _render() {
@@ -56,10 +62,9 @@ class EngineFramework extends EventManager {
     
     setup() {}
     load() {}
-    start() {}
-    update() {}
-    render() {}
-
+    update(delta) { /* this.state.update(delta); */ }
+    render(context, canvas) {}
+    
     main() { this._setup(); }
     
     fps() {
@@ -67,49 +72,6 @@ class EngineFramework extends EventManager {
             .map(function(x) { return 1000/x; })
             .reduce(function(a, b) { return a+b; }, 0) 
             / this.renderTrackingCount
-    }
-    
-}
-
-class Engine extends EngineFramework {
-    
-    constructor(canvas) {
-        super(canvas);
-        this.assets = new AssetManager(this);
-        this.input = new InputManager(this);
-        this.states = new StateManager(this);
-        this.managers = {
-            assets: this.assets,
-            input: this.inputs,
-            states: this.states,
-            //scripting: this.scripting = new ScriptManager(this),
-            //entities: this.entities = new EntityManager(this),
-        }
-        this.game = null;
-    }
-    
-    _setup() {
-        // TODO: super.setup()
-    }
-    
-    setup() {
-        
-    }
-    
-    start() {
-    
-    }
-    
-    update(delta) {
-        this.state.update(delta);
-    }
-    
-    render(context, canvas) {
-        
-    }
-    
-    main() {
-    
     }
     
 }

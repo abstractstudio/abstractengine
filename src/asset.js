@@ -55,8 +55,10 @@ class Asset {
 
 class AssetManager extends EventManager {
     
-    constructor() {
+    constructor(engine) {
         super();
+        this.engine = engine;
+        this.engine.managers.assets = this;
         this.jobs = [];
         this.map = {};
         this.status = CREATED;
