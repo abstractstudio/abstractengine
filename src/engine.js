@@ -1,4 +1,4 @@
-goog.require("engine.EventManager");
+goog.require("engine.EventInterface");
 goog.require("engine.AssetManager");
 goog.require("engine.InputManager");
 //goog.require("engine.ScriptManager");
@@ -6,7 +6,7 @@ goog.require("engine.InputManager");
 goog.provide("engine.Engine");
 
 
-class Engine extends EventManager {
+class Engine extends EventInterface {
     
     constructor(canvas) {
         super();
@@ -33,6 +33,7 @@ class Engine extends EventManager {
     
     _load() {
         console.log("Loading the engine.");
+        this.load();
         this._start();
     }
     

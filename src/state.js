@@ -1,7 +1,7 @@
-goog.require("engine.EventManager");
+goog.require("engine.EventInterface");
 goog.provide("engine.State");
 
-class State extends EventManager {
+class State extends EventInterface {
     
     constructor(engine) {
         super();
@@ -19,7 +19,7 @@ class State extends EventManager {
     
 }
 
-class Transition extends EventManager {
+class Transition extends EventInterface {
     
     constructor(engine, game) {
         super();
@@ -29,7 +29,7 @@ class Transition extends EventManager {
     
 }
 
-class StateManager extends EventManager {
+class StateManager extends EventInterface {
     
     constructor(engine) {
         super();

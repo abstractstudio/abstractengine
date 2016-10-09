@@ -1,4 +1,4 @@
-goog.require("engine.EventManager");
+goog.require("engine.EventInterface");
 goog.provide("engine.Asset");
 goog.provide("engine.AssetManager");
 
@@ -53,7 +53,7 @@ class Asset {
     
 }
 
-class AssetManager extends EventManager {
+class AssetManager extends EventInterface {
     
     constructor(engine) {
         super();

@@ -1,4 +1,4 @@
-goog.require("engine.EventManager");
+goog.require("engine.EventInterface");
 goog.provide("engine.InputManager");
 goog.provide("engine.KEY");
 goog.provide("engine.BUTTON");
@@ -10,7 +10,7 @@ const BUTTON = Object.freeze({HELD: 1, PRESSED: 2});
 const MOUSE = Object.freeze({LEFT: 0, RIGHT: 2});
 const IGNORE = new Set([37, 39, 38, 40, 32]);
 
-class InputManager extends EventManager {
+class InputManager extends EventInterface {
 
     constructor(engine) {
         super();

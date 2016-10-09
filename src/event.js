@@ -1,6 +1,6 @@
-goog.provide("engine.EventManager");
+goog.provide("engine.EventInterface");
 
-class EventManager {
+class EventInterface {
     
     constructor() {
         this.eventListeners = {};
