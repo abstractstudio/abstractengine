@@ -25,7 +25,11 @@ class Transition extends EventInterface {
         super();
         this.engine = engine;
         this.game = game;
+        for (manager in this.engine.managers) 
+            this[manager] = this.engine.managers[manager];
     }
+    
+    main() {}
     
 }
 
@@ -53,10 +57,12 @@ class StateManager extends EventInterface {
             return;
         } 
         var transition = this.engine.state.transitions[name];
-        if (transition !== undefined) {
+        if (!transition) {
             console.warn("Current state is not linked to state '" + name + "'.");
             return;
         }
+        transition.main();
+        this.engine.state = this.states[name];
     }
     
 }
