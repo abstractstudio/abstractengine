@@ -1,8 +1,9 @@
 goog.require("engine.EventInterface");
 goog.require("engine.AssetManager");
 goog.require("engine.InputManager");
+goog.require("engine.InterfaceManager");
+goog.require("engine.EntityManager");
 //goog.require("engine.ScriptManager");
-//goog.require("engine.EntityManager");
 goog.provide("engine.Engine");
 
 
@@ -15,6 +16,8 @@ class Engine extends EventInterface {
         this.game = null;
         this.assets = new AssetManager(this);
         this.input = new InputManager(this);
+        this.interface = new InterfaceManager(this);
+        this.entities = new EntityManager(this);
         this.states = new StateManager(this);
         this.updateLimit = 60;
         this.updateInterval = 1000 / this.updateLimit;
@@ -47,6 +50,7 @@ class Engine extends EventInterface {
         var delta = Date.now() - this.updateTime;
         this.updateTime = Date.now();
         this.update(delta);
+        this.entities.update(delta);
         this.input.update(delta);
     }
     

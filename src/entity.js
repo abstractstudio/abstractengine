@@ -1,5 +1,8 @@
 goog.provide("engine.Transform2D");
+goog.provide("engine.BoxCollider2D");
+goog.provide("engine.CircleCollider2D");
 goog.provide("engine.Entity2D");
+goog.provide("engine.EntityManager");
 
 class Transform2D { 
     constructor() {
@@ -13,7 +16,6 @@ class BoxCollider2D {
     constructor (w, h) {
         this.width = w || 0;
         this.height = h || 0;
-        
         this.transform = new Transform2D();
     }
 }
@@ -29,26 +31,22 @@ class Entity2D {
     constructor() {
         this.transform = new Transform2D();
         this.renderables = {};
-        this.currentRenderable = null;
+        this.renderable = null;
         this.collider = null;
     }
     
-    setCurrentRenderable(name) {
-        this.currentRenderable = this.renderables[name];
+    setRenderable(name) {
+        this.renderable = this.renderables[name];
     }
     
-    update() {
-        
+    update(delta) {
+        this.renderable.update(delta);
     }
     
-    render() {
-        if (this.currentRenderable.type == ANIMATION) {
-            this.currentRenderable.nextFrame();
-            this.currentRenderable.render();
-        } else if (this.currentRenderable.type == IMAGE) {
-            this.currentRenderable.render();
-        }
+    render(context, canvas) {
+        this.renderable.render(context, canvas);
     }
+    
 }
 
 class EntityManager {
@@ -57,15 +55,16 @@ class EntityManager {
         this.entities = {};
     }
     
-    update() {
+    update(delta) {
         for (var e in entities) {
-            this.entities[e].update();
+            this.entities[e].update(delta);
         }
     }
     
-    render() {
+    render(context, canvas) {
         for (var e in entities) {
-            this.entities[e].render();
+            this.entities[e].render(context, canvas);
         }
     }
+    
 }
