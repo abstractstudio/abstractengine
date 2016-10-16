@@ -1,4 +1,5 @@
 goog.require("engine.EventInterface");
+goog.require("engine.Animation");
 goog.provide("engine.Asset");
 goog.provide("engine.AssetManager");
 

@@ -1,5 +1,6 @@
-goog.require("engine.EventManager");
+goog.require("engine.EventInterface");
 goog.provide("engine.Animation");
+
 
 class Animation extends EventManager {
 
@@ -50,11 +51,13 @@ class Animation extends EventManager {
     onerror(e) {}
     onfinish(e) {}
     
-    play(useInterval) {
+    frame(index) {
+        this.frameIndex = index % this.frameCount;
+    }
+    
+    play() {
         this.frameIndex = 0;
         this.isPlaying = true;
-        if (useInterval !== false)
-            this._interval = setInterval(() => { this._update(); }, this.frameSpeed);
     }
     
     _update() {
@@ -63,10 +66,6 @@ class Animation extends EventManager {
             if (!this.loop) this._onfinish();
             else this.frameIndex = 0;
         }
-    }
-    
-    frame(index) {
-        this.frameIndex = index % this.frameCount;
     }
     
     update() {
@@ -80,10 +79,7 @@ class Animation extends EventManager {
     }
     
     stop() {
-        if (this._interval) {
-            clearInterval(this._interval);
-            this._interval = null;
-        }
+        this.isPlaying = false;
     }
 
 }
@@ -103,4 +99,3 @@ CanvasRenderingContext2D.prototype["drawAnimation"] = function(animation, dx, dy
     this.drawImage(image, x, y, w, h, dx, dy, dWidth || w, dHeight || h);
 
 }
-
