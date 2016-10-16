@@ -76,6 +76,7 @@ class Engine2D extends Engine {
     constructor(canvas) {
         super(canvas);
         this.context = canvas.getContext("2d");
+        this.context.imageSmoothingEnabled = false;
     }
     
     _render() {
