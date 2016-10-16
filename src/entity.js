@@ -56,13 +56,13 @@ class EntityManager {
     }
     
     update(delta) {
-        for (var e in entities) {
+        for (var e in this.entities) {
             this.entities[e].update(delta);
         }
     }
     
     render(context, canvas) {
-        for (var e in entities) {
+        for (var e in this.entities) {
             this.entities[e].render(context, canvas);
         }
     }

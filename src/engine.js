@@ -5,6 +5,7 @@ goog.require("engine.InterfaceManager");
 goog.require("engine.EntityManager");
 //goog.require("engine.ScriptManager");
 goog.provide("engine.Engine");
+goog.provide("engine.Engine2D");
 
 
 class Engine extends EventInterface {
@@ -12,6 +13,7 @@ class Engine extends EventInterface {
     constructor(canvas) {
         super();
         this.canvas = canvas;
+        this.context = null;
         this.managers = {};
         this.game = null;
         this.assets = new AssetManager(this);
@@ -67,7 +69,7 @@ class Engine extends EventInterface {
     
     setup() {}
     load() {}
-    update(delta) { /* this.state.update(delta); */ }
+    update(delta) {}
     render(context, canvas) {}
     
     main() { this._setup(); }
@@ -80,3 +82,15 @@ class Engine extends EventInterface {
     }
     
 }
+
+
+class Engine2D extends Engine {
+    
+    constructor(canvas) {
+        super(canvas);
+        this.context = canvas.getContext("2d");
+    }
+    
+}
+
+

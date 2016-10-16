@@ -1,10 +1,6 @@
-goog.require("engine.Engine");
+goog.require("engine.Engine2D");
 
-class Demo extends Engine {
-    
-    setup() {
-        this.context = this.canvas.getContext("2d");
-    }
+class Demo extends Engine2D {
         
     render(context, canvas) {    
         context.fillStyle = "white";

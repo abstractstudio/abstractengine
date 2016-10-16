@@ -22,7 +22,7 @@ class InputManager extends EventInterface {
         
         this.mouse = {x: 0, y: 0};
         this.keyboard = {};
-        this.captureMouseEnabled = true;
+        this.captureMouseEnabled = false;
         this.preventReloadEnabled = false;  // For development purposes
         
         this._captured = false;
