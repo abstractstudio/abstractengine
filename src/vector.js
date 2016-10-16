@@ -1,7 +1,7 @@
-goog.provide("engine.Vector");
+goog.provide("engine.Vector2");
 
 /** Simple vector class. */
-class Vector {
+class Vector2 {
     
     constructor(x, y) {
         this.x = x || 0;

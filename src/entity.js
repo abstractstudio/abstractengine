@@ -1,3 +1,4 @@
+goog.require("engine.Vector2");
 goog.provide("engine.Transform2D");
 goog.provide("engine.BoxCollider2D");
 goog.provide("engine.CircleCollider2D");
@@ -51,17 +52,31 @@ class Entity2D {
 
 class EntityManager {
     
-    constructor() {
+    constructor(engine) {
+        this.engine = engine;
+        this.engine.managers.entities = this;
         this.entities = {};
+        this.autoupdate = true;
+        this.autorender = true;
+    }
+    
+    add(name, entity) {
+        this.entities[name] = entity;
+    }
+    
+    get(name) {
+        return this.entities[name];
     }
     
     update(delta) {
+        if (!this.autoupdate) return;
         for (var e in this.entities) {
             this.entities[e].update(delta);
         }
     }
     
     render(context, canvas) {
+        if (!this.autorender) return;
         for (var e in this.entities) {
             this.entities[e].render(context, canvas);
         }

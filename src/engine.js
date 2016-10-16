@@ -56,21 +56,9 @@ class Engine extends EventInterface {
         this.input.update(delta);
     }
     
-    _render() {
-        requestAnimationFrame(this._render.bind(this));
-        var delta = Date.now() - this.renderTime;
-        this.renderTime = Date.now();
-        this.render(this.context, this.canvas);
-        this.renderHistory[this.renderTrackingIndex] = delta;
-        this.renderTrackingIndex++;
-        if (this.renderTrackingIndex == this.renderTrackingCount) 
-            this.renderTrackingIndex = 0;
-    }
-    
     setup() {}
     load() {}
     update(delta) {}
-    render(context, canvas) {}
     
     main() { this._setup(); }
     
@@ -90,6 +78,22 @@ class Engine2D extends Engine {
         super(canvas);
         this.context = canvas.getContext("2d");
     }
+    
+    _render() {
+        requestAnimationFrame(this._render.bind(this));
+        var delta = Date.now() - this.renderTime;
+        this.renderTime = Date.now();
+        this.prerender(this.context, this.canvas);
+        this.entities.render(this.context, this.canvas);
+        this.postrender(this.context, this.canvas);
+        this.renderHistory[this.renderTrackingIndex] = delta;
+        this.renderTrackingIndex++;
+        if (this.renderTrackingIndex == this.renderTrackingCount) 
+            this.renderTrackingIndex = 0;
+    }
+    
+    prerender(canvas, context) {}
+    postrender(canvas, context) {}
     
 }
 

@@ -2,7 +2,7 @@ goog.require("engine.EventInterface");
 goog.provide("engine.Animation");
 
 
-class Animation extends EventManager {
+class Animation extends EventInterface {
 
     constructor() {
         super();

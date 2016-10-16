@@ -1,5 +1,6 @@
 goog.require("engine.EventInterface");
 goog.provide("engine.State");
+goog.provide("engine.Transition")
 
 class State extends EventInterface {
     
@@ -14,7 +15,8 @@ class State extends EventInterface {
     
     start() {}
     update(delta) {}
-    render(context, canvas) {}
+    prerender(context, canvas) {}
+    postrender(context, canvas) {}
     stop() {}
     
 }
@@ -56,13 +58,17 @@ class StateManager extends EventInterface {
             console.warn("State '" + name + "' does not exist.");
             return;
         } 
-        var transition = this.engine.state.transitions[name];
-        if (!transition) {
-            console.warn("Current state is not linked to state '" + name + "'.");
-            return;
-        }
-        transition.main();
+		if (this.engine.state !== null) {
+			var transition = this.engine.state.transitions[name];
+			if (transition === null) {
+				console.warn("Current state is not linked to state '" + name + "'.");
+				return;
+			}
+			this.engine.state.stop();
+			transition.main();
+		}
         this.engine.state = this.states[name];
-    }
+		this.engine.state.start();
+	}
     
 }
