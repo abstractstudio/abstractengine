@@ -52,7 +52,6 @@ class Engine extends EventInterface {
         var delta = Date.now() - this.updateTime;
         this.updateTime = Date.now();
         this.update(delta);
-        this.entities.update(delta);
         this.input.update(delta);
     }
     
@@ -83,17 +82,14 @@ class Engine2D extends Engine {
         requestAnimationFrame(this._render.bind(this));
         var delta = Date.now() - this.renderTime;
         this.renderTime = Date.now();
-        this.prerender(this.context, this.canvas);
-        this.entities.render(this.context, this.canvas);
-        this.postrender(this.context, this.canvas);
+        this.render(this.context, this.canvas);
         this.renderHistory[this.renderTrackingIndex] = delta;
         this.renderTrackingIndex++;
         if (this.renderTrackingIndex == this.renderTrackingCount) 
             this.renderTrackingIndex = 0;
     }
     
-    prerender(canvas, context) {}
-    postrender(canvas, context) {}
+    render(canvas, context) {}
     
 }
 
