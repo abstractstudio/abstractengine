@@ -9,7 +9,7 @@ class Transform2D {
     
     constructor() {
         this.position = new Vector2();
-        this.rotation = new Vector2(); // TODO make quaternions
+        this.rotation = 0; // Radians
         this.scale = new Vector2();
     }
     
