@@ -15,8 +15,7 @@ class State extends EventInterface {
     
     start() {}
     update(delta) {}
-    prerender(context, canvas) {}
-    postrender(context, canvas) {}
+    render(context, canvas) {}
     stop() {}
     
 }
@@ -31,7 +30,7 @@ class Transition extends EventInterface {
             this[manager] = this.engine.managers[manager];
     }
     
-    main() {}
+    start() {}
     
 }
 
@@ -50,25 +49,28 @@ class StateManager extends EventInterface {
     }
     
     link(from, to, Transition) {
-        this.states[from].transitions[to] = new Transition(this.engine, this.engine.game);
+        var transition;
+        if (Transition === undefined) transition = null;
+        else transition = new Transition(this.engine, this.engine.game);
+        this.states[from].transitions[to] = transition;
     }
     
-    goto(name) {
+    go(name) {
         if (!this.states.hasOwnProperty(name)) {
             console.warn("State '" + name + "' does not exist.");
             return;
-        } 
-		if (this.engine.state !== null) {
-			var transition = this.engine.state.transitions[name];
-			if (transition === null) {
-				console.warn("Current state is not linked to state '" + name + "'.");
-				return;
-			}
+        } else if (this.engine.state !== null) {
 			this.engine.state.stop();
-			transition.main();
 		}
+        var transition = this.engine.state.transitions[name];
+        if (transition === undefined) {
+            console.warn("Current state is not linked to state '" + name + "'.");
+            return;
+        } else if (transition !== null) {
+            transition.start();
+        }
         this.engine.state = this.states[name];
-		this.engine.state.start();
+        this.engine.state.start();
 	}
     
 }

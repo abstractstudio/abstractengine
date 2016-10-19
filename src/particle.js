@@ -1,4 +1,3 @@
-goog.require("engine.Vector2D");
 goog.require("engine.Entity2D");
 
 goog.provide("engine.Particle2D");
@@ -39,7 +38,7 @@ class Particle2D {
     render(context, canvas) {}
 }
 
-class CircleParticle {
+class CircleParticle2D extends Particle2D {
     
     constructor(transform, life, color, deltaColor, radius, deltaRadius) {
         super(transform, life);
@@ -79,9 +78,10 @@ class CircleParticle {
 
 class ParticleSystem2D extends Entity2D {
     
-    constructor(particleType) {
+    constructor(Particle) {
+        super();
         this.maxParticles = 0;
-        this.ParticleType = particleType;
+        this.Particle = Particle;
 
         this.emissionRate = 0;
         this.emitCounter = 0;
@@ -111,7 +111,7 @@ class ParticleSystem2D extends Entity2D {
     reset() {
         this._particlePool = [];
 		for (var i = 0; i < this.maxParticles; i++) {
-			this._particlePool.push(new this.ParticleType());
+			this._particlePool.push(new this.Particle());
 		}
 		
 		this._particleCount = 0;
@@ -124,7 +124,7 @@ class ParticleSystem2D extends Entity2D {
                               this.transform.position.y + this.posVar.y*this._rand());
         var rot = this.rot + this.rotVar*this._rand();
         var transform = new Transform(pos, rot);
-		var particle = new this.ParticleType(transform, this.life + this.lifeVar*this._rand());
+		var particle = new this.Particle(transform, this.life + this.lifeVar*this._rand());
 		
 		// Set velocity
 		var speed = this.speed + this.speedVar*this._rand();
