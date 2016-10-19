@@ -61,13 +61,13 @@ class StateManager extends EventInterface {
             return;
         } else if (this.engine.state !== null) {
 			this.engine.state.stop();
-		}
-        var transition = this.engine.state.transitions[name];
-        if (transition === undefined) {
-            console.warn("Current state is not linked to state '" + name + "'.");
-            return;
-        } else if (transition !== null) {
-            transition.start();
+            var transition = this.engine.state.transitions[name];
+            if (transition === undefined) {
+                console.warn("Current state is not linked to state '" + name + "'.");
+                return;
+            } else if (transition !== null) {
+                transition.start();
+            }
         }
         this.engine.state = this.states[name];
         this.engine.state.start();

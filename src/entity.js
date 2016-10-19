@@ -13,6 +13,17 @@ class Transform2D {
         this.scale = scl || new Vector2();
     }
     
+    get x() { return this.position.x; }
+    set x(v) { return this.position.x = v; }
+    get y() { return this.position.y; }
+    set y(v) { return this.position.y = v; }
+    
+    get r() { return this.rotation; }
+    set r(v) { return this.rotation = v; }
+    
+    get s() { return this.scale; }
+    set s(v) { return this.scale = v; }
+    
 }
 
 class BoxCollider2D {
