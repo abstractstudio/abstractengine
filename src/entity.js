@@ -7,10 +7,10 @@ goog.provide("engine.EntityManager");
 
 class Transform2D { 
     
-    constructor() {
-        this.position = new Vector2();
-        this.rotation = 0; // Radians
-        this.scale = new Vector2();
+    constructor(pos, rot, scl) {
+        this.position = pos || new Vector2();
+        this.rotation = rot || 0; // Radians
+        this.scale = scl || new Vector2();
     }
     
 }
