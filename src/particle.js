@@ -1,7 +1,9 @@
 goog.require("engine.Entity2D");
 
 goog.provide("engine.Particle2D");
-goog.provide("engine.ParticleEmitter");
+goog.provide("engine.CircleParticle");
+goog.provide("engine.ParticleSystem");
+goog.provide("engine.CircleParticleSystem");
 
 const CIRCLE = 69;
 const SQUARE = 42;
@@ -9,28 +11,23 @@ const SQUARE = 42;
 class Particle2D {
     
     constructor(transform, life) {
-        this.transform = transform || new Transform();
-        this.velocity = new Vector(0, 0);
+        this.transform = transform || new Transform2D();
+        this.velocity = new Vector2(0, 0);
+        this.acceleration = new Vector2(0, 0);
         
         this.life = life || 0;
         this.alive = true;
-        
-        this.radius = 0;
-        this.color = [];
-        
-        this.deltaRadius = 0;
-        this.deltaColor = [];
     }
     
     update(delta) {
 		this.life -= delta;
-		this.radius += this.deltaRadius * delta;
-		
-		
+        
 		if (this.life <= 0) {
 			this.alive = false;
 		} else {
-			this.pos.add(this.velocity.copy().scale(delta));
+            this.velocity.add(this.acceleration.copy().scale(delta));
+			this.transform.position.add(this.velocity.copy().scale(delta));
+            console.log(this.pos);
 		}
 	}
     
@@ -38,7 +35,7 @@ class Particle2D {
     render(context, canvas) {}
 }
 
-class CircleParticle2D extends Particle2D {
+class CircleParticle extends Particle2D {
     
     constructor(transform, life, color, deltaColor, radius, deltaRadius) {
         super(transform, life);
@@ -78,10 +75,11 @@ class CircleParticle2D extends Particle2D {
 
 class ParticleSystem2D extends Entity2D {
     
-    constructor(Particle) {
+    constructor(Particle, maxParticles) {
         super();
-        this.maxParticles = 0;
-        this.Particle = Particle;
+        
+        this.Particle = Particle || Particle2D.constructor;
+        this.maxParticles = maxParticles || 0;
 
         this.emissionRate = 0;
         this.emitCounter = 0;
@@ -90,13 +88,15 @@ class ParticleSystem2D extends Entity2D {
         this.active = false;
         
         this.image = null;
-        
-        this.transform = new Transform();
-        this.posVar = new Vector(0, 0); 
+
+        this.posVar = new Vector2(0, 0); 
         this.rotVar = 0; 
 
         this.speed = 0; 
-        this.speedVar = 0; 
+        this.speedVar = 0;
+        
+        this.acceleration = 0;
+        this.accelerationVar = 0;
 
         this.life = 0; 
         this.lifeVar = 0;
@@ -105,7 +105,7 @@ class ParticleSystem2D extends Entity2D {
         this._particleCount = 0;
         this._particleIndex = 0;
         
-        reset();
+        this.reset();
     }
     
     reset() {
@@ -118,43 +118,18 @@ class ParticleSystem2D extends Entity2D {
         this.active = true;
     }
 	
-	_resetParticle() {
+	generateParticle() {
 		// Initialize particle with transform and life
-        var pos = new Vector2(this.transform.position.x + this.posVar.x*this._rand(), 
-                              this.transform.position.y + this.posVar.y*this._rand());
-        var rot = this.rot + this.rotVar*this._rand();
+        var pos = this.transform.position.copy().add(new Vector2(this.posVar.x * (Math.random()*2+1)), this.posVar.y * (Math.random()*2+1));
+        var rot = this.rot + this.rotVar * (Math.random()*2+1);
         var transform = new Transform(pos, rot);
-		var particle = new this.Particle(transform, this.life + this.lifeVar*this._rand());
+		var particle = new this.Particle(transform, this.life + this.lifeVar * (Math.random()*2+1));
 		
-		// Set velocity
-		var speed = this.speed + this.speedVar*this._rand();
+		// Set velocity and acceleration
+		var speed = this.speed + this.speedVar * (Math.random()*2+1);
 		particle.velocity = new Vector2(speed * Math.cos(rot), speed * Math.sin(rot));
-		
-		// Set particle size (start and end)
-		particle.radius = this.properties.startRadius + this.properties.startRadiusVar*this._rand();
-        if (this.properties.endRadius) {  
-            var endradius = this.properties.endRadius + this.properties.endRadiusVar*this._rand();
-            particle.deltaRadius = (endradius - particle.radius) / particle.life;
-        }
-		
-		// Set particle color (start and end)
-		if (this.properties.startColor) {
-			var sc = [];
-			for (var i = 0; i < this.properties.startColor.length; i++) 
-				sc.push(this.properties.startColor[i] + this.properties.startColorVar[i]*this._rand());
-            
-			var ec = [];
-            for (var i = 0; i < sc.length; i++) ec[i] = sc[i];
-			if (this.properties.endColor) {
-				for (var i = 0; i < this.properties.endColor.length; i++) 
-					ec[i] = this.properties.endColor[i] + this.properties.endColorVar[i]*this._rand();
-			}
-            
-			particle.color = sc;
-			particle.deltaColor = [];
-			for (var i = 0; i < sc.length; i++)
-				particle.deltaColor.push((ec[i] - sc[i]) / particle.life);
-		}
+        var accel = this.acceleration + this.accelerationVar * (Math.random()*2+1);
+		particle.acceleration = new Vector2(accel * Math.cos(rot), accel * Math.sin(rot));
 
 		return particle;
 	}
@@ -162,7 +137,7 @@ class ParticleSystem2D extends Entity2D {
 	_addParticle() {
 		if (this._isFull()) return false;
 		
-		this._particlePool[this._particleCount++] = this._resetParticle();
+		this._particlePool[this._particleCount++] = this.generateParticle();
 		
 		return true;
 	}
@@ -204,11 +179,7 @@ class ParticleSystem2D extends Entity2D {
 	_isFull() {
 		return this._particleCount === this.maxParticles;
 	}
-	
-	_rand() {
-		return Math.random() * 2 - 1;
-	}
-	
+    
 	render(context, canvas) {
 		for (var i = 0; i < this._particleCount; i++) {
 			var particle = this._particlePool[i];
@@ -217,4 +188,51 @@ class ParticleSystem2D extends Entity2D {
 			}
 		}
 	}
+}
+
+class CircleParticleSystem extends ParticleSystem2D {
+    constructor(maxParticles) {
+        super(CircleParticle.constructor, maxParticles);
+        
+        this.startRadius = 0;
+        this.endRadius = 0;
+        
+        this.startColor = [0, 0, 0, 0];
+        this.endColor = [0, 0, 0, 0];
+    }
+    
+    genParticle() {
+        var particle = super.genParticle();
+        
+        // Set particle size (start and end)
+		particle.radius = this.startRadius + this.startRadiusVar * (Math.random()*2+1);
+        if (this.endRadius) {
+            var endradius = this.endRadius + this.endRadiusVar * (Math.random()*2+1);
+            particle.deltaRadius = (endradius - particle.radius) / particle.life;
+        }
+		
+		// Set particle color
+		if (this.startColor) {
+            // Start color
+			var sc = [];
+			for (var i = 0; i < this.startColor.length; i++) 
+				sc.push(this.startColor[i] + this.startColorVar[i] * (Math.random()*2+1));
+            
+            // End color
+			var ec = [];
+            for (var i = 0; i < sc.length; i++) ec[i] = sc[i];
+			if (this.endColor) {
+				for (var i = 0; i < this.endColor.length; i++) 
+					ec[i] = this.endColor[i] + this.endColorVar[i] * (Math.random()*2+1);
+			}
+            
+            // Set start and calculate deltaColor
+			particle.color = sc;
+			particle.deltaColor = [];
+			for (var i = 0; i < sc.length; i++)
+				particle.deltaColor.push((ec[i] - sc[i]) / particle.life);
+		}
+        
+        return particle;
+    }
 }
