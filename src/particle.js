@@ -12,9 +12,9 @@ const SQUARE = 42;
 class Particle2D {
     
     constructor(transform, life) {
-        this.transform = transform || new Transform2();
-        this.velocity = new Vector2(0, 0);
-        this.acceleration = new Vector2(0, 0);
+        this.transform = transform || new Transform2D();
+        this.velocity = new Vector2D(0, 0);
+        this.acceleration = new Vector2D(0, 0);
         
         this.life = life || 0;
         this.alive = false;
@@ -38,16 +38,16 @@ class CircleParticle2D extends Particle2D {
     
     constructor(transform, life, color, deltaColor, radius, deltaRadius) {
         super(transform, life);
-        this.color = color;
-        this.deltaColor = deltaColor;
-        this.radius = radius;
-        this.deltaRadius = deltaRadius;
+        this.color = color || [0, 0, 0, 0];
+        this.deltaColor = deltaColor || [0, 0, 0, 0];
+        this.radius = radius || 0;
+        this.deltaRadius = deltaRadius || 0;
     }
     
     update(delta) {
         super.update(delta);
         for (var i = 0; i < this.color.length; i++)
-			this.color[i] += this.deltaColor[i] * delta;
+			this.color[i] = this.color[i] + this.deltaColor[i] * delta;
         this.radius += this.deltaRadius * delta;
     }
     
@@ -55,13 +55,18 @@ class CircleParticle2D extends Particle2D {
         context.save();
         context.translate(this.transform.x, this.transform.y);
         context.rotate(-this.rot);
-        context.fillStyle = "rgba(" + this.color.join(",") + ")";
+        
+        var colorString = "rgba(";
+        for (var i = 0; i < this.color.length - 1; i++)
+            colorString += Math.floor(this.color[i]) + ",";
+        colorString += Math.floor(this.color[this.color.length - 1]) + ")";
+        context.fillStyle = colorString;
+        
         context.beginPath();
-        context.arc(this.transform.x, this.transform.y, this.radius, 0, 2*Math.PI);
+        context.arc(0, 0, this.radius, 0, 2*Math.PI);
         context.fill();
         context.restore();
     }
-    
 }
 
 class ParticleSystem2D extends Entity2D {
@@ -74,7 +79,7 @@ class ParticleSystem2D extends Entity2D {
         this.emissionRate = emissionRate || 0;
         this._particlePool = [];
         this._deadIndex = 0;
-        this._emitCounter = 0;
+        this._lastEmission = 0;
         
         this.duration = 0;
         this.alive = false;
@@ -82,7 +87,7 @@ class ParticleSystem2D extends Entity2D {
         this.baseSpeed = 0; 
         this.baseAcceleration = 0;
         this.baseLife = 0; 
-        this.positionVariation = new Vector2(0, 0); 
+        this.positionVariation = new Vector2D(0, 0); 
         this.rotationVariation = 0; 
         this.speedVariation = 0;
         this.accelerationVariation = 0;
@@ -98,11 +103,10 @@ class ParticleSystem2D extends Entity2D {
     }
     
 	_spawnParticle(particle) {
-        particle.transform.x = this.transform.x + this.positionVariation.x * (Math.random()*2 - 1);
-        particle.transform.y = this.transform.y + this.positionVariation.y * (Math.random()*2 - 1);
-        particle.transform.r = this.transform.r + this.rotationVariation * (Math.random()*2 - 1);
+        particle.transform.position = this.transform.position.copy().add(this.positionVariation.scaled(Math.random()*2 - 1));
+        particle.transform.rotation = this.transform.r + this.rotationVariation * (Math.random()*2 - 1);
 		particle.life = this.baseLife + this.lifeVariation * (Math.random()*2 - 1);
-        var direction = new Vector2(Math.cos(this.transform.r), Math.sin(this.transform.r));
+        var direction = new Vector2D(Math.cos(this.transform.r), Math.sin(this.transform.r));
         var speed = this.baseSpeed + this.speedVariation * (Math.random()*2 - 1);
         var acceleration = this.baseAcceleration + this.accelerationVariation * (Math.random()*2+1);
 		particle.velocity = direction.scaled(speed);
@@ -121,13 +125,13 @@ class ParticleSystem2D extends Entity2D {
 	}
 	
 	update(delta) {
-		if (!this.alive) return;        
+		if (!this.alive) return;
 		if (this.emissionRate) {
 			var rate = 1.0 / this.emissionRate;
-			this._emitCounter += delta;
-			while (!this._isFull() && this._emitCounter > rate) {
+			this._lastEmission += delta;
+			while (!this._isFull() && this._lastEmission > rate) {
 				this._addParticle();
-				this._emitCounter = 0;
+				this._lastEmission = 0;
 			}
 		}
 		var index = 0;
@@ -164,50 +168,47 @@ class ParticleSystem2D extends Entity2D {
 
 class CircleParticleSystem2D extends ParticleSystem2D {
     
-    constructor(maxParticles, emissionRate) {
-        super(CircleParticle2D.prototype.constructor, maxParticles, emissionRate);    
-        this.startRadius = 0;
-        this.startRadiusVar = 0;
-        this.endRadius = 0;
-        this.endRadiusVar = 0;
-        this.color = [0, 0, 0, 0];
-        this.colorVar = [0, 0, 0, 0];
-        this.endColor = [0, 0, 0, 0];
-        this.endColorVar = [0, 0, 0, 0];
+    constructor(maxParticles, emissionRate, baseRadius, baseColor, endRadius, endColor) {
+        super(CircleParticle2D.prototype.constructor, maxParticles, emissionRate);
+        
+        this.baseRadius = baseRadius || 1;
+        this.endRadius = endRadius || baseRadius || NaN;
+        this.baseColor = baseColor || [0, 0, 0, 0];
+        this.endColor = endColor || baseColor || null;
+        
+        this.baseRadiusVariation = 0;
+        this.endRadiusVariation = 0;
+        this.baseColorVariation = [0, 0, 0, 0];
+        this.endColorVariation = [0, 0, 0, 0];
     }
     
     _spawnParticle(particle) {
         super._spawnParticle(particle);
         
         // Set particle size (start and end)
-		particle.radius = this.startRadius + this.startRadiusVar * (Math.random()*2 - 1);
+		particle.radius = this.baseRadius + this.baseRadiusVariation * (Math.random()*2 - 1);
         particle.deltaRadius = 0;
         if (this.endRadius) {
-            var endradius = this.endRadius + this.endRadiusVar * (Math.random()*2 - 1);
-            particle.deltaRadius = (endradius - particle.radius) / particle.life;
+            var endR = this.endRadius + this.endRadiusVariation * (Math.random()*2 - 1);
+            particle.deltaRadius = (endR - particle.radius) / particle.life;
         }
        
-		// Set particle color
-		if (this.color) {
-            // Start color
-			var sc = [];
-			for (var i = 0; i < this.color.length; i++) 
-				sc.push(this.color[i] + this.colorVar[i] * (Math.random()*2 - 1));
+		// Start color
+        particle.color = [];
+        for (var i = 0; i < this.baseColor.length; i++) 
+            particle.color[i] = Math.min(255, Math.max(0, this.baseColor[i] + this.baseColorVariation[i] * (Math.random()*2 - 1)));
+        
+        // End color
+        particle.deltaColor = [0, 0, 0, 0];
+        if (this.endColor) {
+            var endC = [];
+            for (var i = 0; i < this.endColor.length; i++) 
+                endC[i] = Math.min(255, Math.max(0, this.endColor[i] + this.endColorVariation[i] * (Math.random()*2 - 1)));
             
-            // End color
-			var ec = [];
-            for (var i = 0; i < sc.length; i++) ec[i] = sc[i];
-			if (this.endColor) {
-				for (var i = 0; i < this.endColor.length; i++) 
-					ec[i] = this.endColor[i] + this.endColorVar[i] * (Math.random()*2 - 1);
-			}
-            
-            // Set start and calculate deltaColor
-			particle.color = sc;
-			particle.deltaColor = [];
-			for (var i = 0; i < sc.length; i++)
-				particle.deltaColor.push((ec[i] - sc[i]) / particle.life);
-		}
+            // Calculate delta color
+            for (var i = 0; i < this.baseColor.length; i++)
+                particle.deltaColor[i] = (endC[i] - particle.color[i]) / particle.life;
+        }
     }
     
     update(delta) {

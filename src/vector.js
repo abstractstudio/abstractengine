@@ -1,7 +1,7 @@
-goog.provide("engine.Vector2");
+goog.provide("engine.Vector2D");
 
 /** Simple vector class. */
-class Vector2 {
+class Vector2D {
     
     constructor(x, y) {
         this.x = x || 0;
@@ -17,13 +17,13 @@ class Vector2 {
     magnitude() { return Math.sqrt(this.dotdot()); }
     
     scale(f) { this.x *= f; this.y *= f; return this; }
-    scaled(f) { return new Vector2(this.x * f, this.y * f); }
+    scaled(f) { return new Vector2D(this.x * f, this.y * f); }
     
     normalize() { return this.scale(1/this.magnitude()); }
     normalized() { return this.scaled(1/this.magnitude()); }
     
     copy() {
-        return new Vector2(this.x, this.y);
+        return new Vector2D(this.x, this.y);
     }
     
     toString() {

@@ -1,16 +1,16 @@
-goog.require("engine.Vector2");
-goog.provide("engine.Transform2");
+goog.require("engine.Vector2D");
+goog.provide("engine.Transform2D");
 goog.provide("engine.BoxCollider2D");
 goog.provide("engine.CircleCollider2D");
 goog.provide("engine.Entity2D");
 goog.provide("engine.EntityManager");
 
-class Transform2 { 
+class Transform2D { 
     
     constructor(pos, rot, scl) {
-        this.position = pos || new Vector2();
+        this.position = pos || new Vector2D();
         this.rotation = rot || 0; // Radians
-        this.scale = scl || new Vector2();
+        this.scale = scl || new Vector2D();
     }
     
     get x() { return this.position.x; }
@@ -31,7 +31,7 @@ class BoxCollider2D {
     constructor (w, h) {
         this.width = w || 0;
         this.height = h || 0;
-        this.transform = new Transform2();
+        this.transform = new Transform2D();
     }
     
 }
@@ -47,7 +47,7 @@ class CircleCollider2D {
 class Entity2D {
     
     constructor() {
-        this.transform = new Transform2();
+        this.transform = new Transform2D();
         this.renderables = {};
         this.renderable = null;
         this.collider = null;
