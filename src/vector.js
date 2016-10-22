@@ -10,15 +10,17 @@ class Vector2 {
     
     add(vec) { this.x += vec.x; this.y += vec.y; return this; }
     sub(vec) { this.x -= vec.x; this.y -= vec.y; return this; }
-    scale(f) { this.x *= f; this.y *= f; return this; }
+    
     dot(vec) { return this.x * vec.x + this.y * vec.y; }
     dotdot() { return this.dot(this); }
+    
     magnitude() { return Math.sqrt(this.dotdot()); }
     
-    normalize() {
-        this.scale(1/this.magnitude());
-        return this;
-    }
+    scale(f) { this.x *= f; this.y *= f; return this; }
+    scaled(f) { return new Vector2(this.x * f, this.y * f); }
+    
+    normalize() { return this.scale(1/this.magnitude()); }
+    normalized() { return this.scaled(1/this.magnitude()); }
     
     copy() {
         return new Vector2(this.x, this.y);
