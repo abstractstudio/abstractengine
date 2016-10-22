@@ -21,7 +21,7 @@ class Vector2 {
     }
     
     copy() {
-        return new Vector(this.x, this.y);
+        return new Vector2(this.x, this.y);
     }
     
     toString() {
