@@ -148,10 +148,14 @@ class ParticleSystem2D extends Entity2D {
     }
     
 	spawnParticle(particle) {
-        particle.transform.position = this.transform.position.copy().add(this.positionVariation.scaled(Math.random()*2 - 1));
-        particle.transform.rotation = this.transform.r + this.rotationVariation * (Math.random()*2 - 1);
+        particle.transform.position = this.transform.position.copy();
+        particle.transform.position.x += this.positionVariation.x * (Math.random()*2 - 1);
+        particle.transform.position.y += this.positionVariation.y * (Math.random()*2 - 1);
+        
+        
+        var rotation = this.transform.r + this.rotationVariation * (Math.random()*2 - 1);
 		particle.life = this.baseLife + this.lifeVariation * (Math.random()*2 - 1);
-        var direction = new Vector2D(Math.cos(this.transform.r), Math.sin(this.transform.r));
+        var direction = new Vector2D(Math.cos(rotation), Math.sin(rotation));
         var speed = this.baseSpeed + this.speedVariation * (Math.random()*2 - 1);
         var acceleration = this.baseAcceleration + this.accelerationVariation * (Math.random()*2+1);
 		particle.velocity = direction.scaled(speed);
@@ -274,8 +278,8 @@ class CircleParticleSystem2D extends ColorParticleSystem2D {
 }
 
 class SquareParticleSystem2D extends ColorParticleSystem2D {
-    constructor(maxParticles, emissionRate) {
-        super(SquareParticle2D.prototype.constructor, maxParticles, emissionRate);
+    constructor(maxParticles, emissionRate, CustomParticle) {
+        super(CustomParticle || SquareParticle2D.prototype.constructor, maxParticles, emissionRate);
         this.baseLength = 0;
         this.endLength = NaN;
         this.baseLengthVariation = 0;
