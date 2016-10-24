@@ -44,6 +44,8 @@ class Engine extends EventInterface {
     
     _start() {
         console.log("Starting the engine.");
+        this.updateTime = Date.now();
+        this.renderTime = Date.now();
         setInterval(() => this._update(), this.updateInterval);
         this._render();
     }
@@ -93,5 +95,3 @@ class Engine2D extends Engine {
     render(canvas, context) {}
     
 }
-
-

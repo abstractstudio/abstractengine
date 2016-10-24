@@ -91,6 +91,7 @@ class CircleParticle2D extends ColorParticle2D {
 }
 
 class SquareParticle2D extends ColorParticle2D {
+    
     constructor(transform, life, color, deltaColor, length, deltaLength) {
         super(transform, life, color, deltaColor);
         this.length = length || 0;
@@ -112,6 +113,7 @@ class SquareParticle2D extends ColorParticle2D {
         
         context.restore();
     }
+    
 }
 
 class ParticleSystem2D extends Entity2D {
@@ -163,7 +165,6 @@ class ParticleSystem2D extends Entity2D {
 	}
 	
 	_addParticle() {
-		if (this._isFull()) return;
         this.spawnParticle(this._particlePool[this._deadIndex]);
         this._particlePool[this._deadIndex].alive = true;
         this._deadIndex++;
@@ -177,11 +178,11 @@ class ParticleSystem2D extends Entity2D {
 		if (!this.running) return;
         
 		if (this.emissionRate) {
-			var rate = 1.0 / this.emissionRate;
+			var rate = 1000.0 / this.emissionRate;
 			this._lastEmission += delta;
 			while (!this._isFull() && this._lastEmission > rate) {
 				this._addParticle();
-				this._lastEmission = 0;
+				this._lastEmission -= rate;
 			}
 		}
         
