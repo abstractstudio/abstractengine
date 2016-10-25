@@ -182,6 +182,8 @@ class ParticleSystem2D extends Entity2D {
                 this._lastEmission = 0;
                 this.stop();
             }
+            if (this._lastEmission > rate)
+                this._lastEmission = 0;
 		}
         
 		var index = 0;
