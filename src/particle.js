@@ -165,7 +165,7 @@ class ParticleSystem2D extends Entity2D {
 	}
     
 	_isFull() {
-		return this._deadIndex === this.maxParticles;
+		return this._deadIndex == this.maxParticles;
 	}
 	
 	update(delta) {
@@ -179,6 +179,7 @@ class ParticleSystem2D extends Entity2D {
 				this._lastEmission -= rate;
 			} else if (this._deadIndex == 0) {
                 this._dying = false;
+                this._lastEmission = 0;
                 this.stop();
             }
 		}
