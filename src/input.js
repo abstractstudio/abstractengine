@@ -104,12 +104,12 @@ class InputManager extends EventInterface {
     }
     
     onMouseMove(e) {
-        if (this._isMouseCaptured) {
+        if (this._captured) {
             this.mouse.x += e.movementX || 0;
             this.mouse.y += e.movementY || 0;
-        } else if (!this._useMouseCapture) {
-            this.mouse.x = e.clientX - (engine.canvas ? engine.canvas.offsetLeft + document.body.scrollLeft : 0);
-            this.mouse.y = e.clientY - (engine.canvas ? engine.canvas.offsetTop + document.body.scrollTop : 0); 
+        } else {
+            this.mouse.x = e.clientX - (this.engine.canvas ? this.engine.canvas.offsetLeft + document.body.scrollLeft : 0);
+            this.mouse.y = e.clientY - (this.engine.canvas ? this.engine.canvas.offsetTop + document.body.scrollTop : 0); 
         }
     }
 

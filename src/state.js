@@ -57,7 +57,6 @@ class StateManager extends EventInterface {
     }
     
     go(name) {
-        
         if (!this.states.hasOwnProperty(name)) {
             console.warn("State '" + name + "' does not exist.");
             return;
