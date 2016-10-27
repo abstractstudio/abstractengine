@@ -16,6 +16,17 @@ class Vector2D {
     
     magnitude() { return Math.sqrt(this.dotdot()); }
     
+    rotate(theta) { 
+        var x = this.x * Math.cos(theta) - this.y * Math.sin(theta);
+        this.y = this.x * Math.sin(theta) + this.y * Math.cos(theta);
+        this.x = x;
+        return this;
+    }
+    rotated(theta) {
+        return new Vector2D(this.x * Math.cos(theta) - this.y * Math.sin(theta), 
+                            this.x * Math.sin(theta) + this.y * Math.cos(theta));
+    }
+    
     scale(f) { this.x *= f; this.y *= f; return this; }
     scaled(f) { return new Vector2D(this.x * f, this.y * f); }
     
