@@ -26,6 +26,10 @@ class Vector2D {
         return new Vector2D(this.x, this.y);
     }
     
+    equals(vec) {
+        return this.x === vec.x && this.y === vec.y;
+    }
+    
     toString() {
         return '(' + this.x + "," + this.y + ")";
     }
