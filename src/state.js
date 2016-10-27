@@ -42,6 +42,7 @@ class StateManager extends EventInterface {
         this.engine.managers.states = this;
         this.states = {};
         this.engine.state = null;
+        this.current = "";
     }
     
     add(name, State) {
@@ -56,6 +57,7 @@ class StateManager extends EventInterface {
     }
     
     go(name) {
+        
         if (!this.states.hasOwnProperty(name)) {
             console.warn("State '" + name + "' does not exist.");
             return;
@@ -70,6 +72,7 @@ class StateManager extends EventInterface {
             }
         }
         this.engine.state = this.states[name];
+        this.current = name;
         this.engine.state.start();
 	}
     
