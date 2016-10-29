@@ -32,20 +32,36 @@ class BoxCollider2D {
         this.transform = transform || new Transform2D();
         this.width = w || 0;
         this.height = h || 0;
+        
+        this.attributeChanged = false;
         this._resetVertices();
     }
     
+    get transform() { return this._transform; }
+    set transform(t) { this._transform = t; this.attributeChanged = true; }
+
+    get width() { return this._width; }
+    set width(w) { this._width = w; this.attributeChanged = true; }
+    
+    get height() { return this._height; }
+    set height(h) { this._height = h; this.attributeChanged = true; }
+    
     _resetVertices() {
-        this.vertices = [this.transform.position.copy().add(new Vector2D(this.width/2, this.height/2).rotated(this.transform.r)), 
-                         this.transform.position.copy().add(new Vector2D(-this.width/2, this.height/2).rotated(this.transform.r)), 
+        this._vertices = [this.transform.position.copy().add(new Vector2D(-this.width/2, this.height/2).rotated(this.transform.r)), 
+                         this.transform.position.copy().add(new Vector2D(this.width/2, this.height/2).rotated(this.transform.r)), 
                          this.transform.position.copy().add(new Vector2D(this.width/2, -this.height/2).rotated(this.transform.r)), 
                          this.transform.position.copy().add(new Vector2D(-this.width/2, -this.height/2).rotated(this.transform.r))];
     }
     
     collides(collider) {
-        this._resetVertices();
+        // Recalculate vertices if an attribute has changed
+        if (this.attributeChanged) {
+            this._resetVertices();
+            this.attributeChanged = false;
+        }
+        
         if (collider instanceof CircleCollider2D) {
-            var maxDist = Number.NEGATIVE_INFINITY; // Max distance from the box center to a box side
+            /*var maxDist = Number.NEGATIVE_INFINITY; // Max distance from the box center to a box side
             var axis = collider.transform.position.copy().sub(this.transform.position); // Axis along line from center to center
             var totalDistance = axis.magnitude(); // Distance between box center and circle center
             axis.normalize(); // Normalize so that projection can be computed with dot product
@@ -54,7 +70,14 @@ class BoxCollider2D {
                 maxDist = Math.max(maxDist, this.vertices[i].copy().sub(this.transform.position).dot(axis)); // Find distance to side and take max
             }
             
-            return totalDistance - maxDist - collider.radius <= 0 || totalDistance == 0;
+            return totalDistance - maxDist*0 - collider.radius <= 0 || totalDistance == 0;*/
+            
+            var circleCenterRotated = collider.transform.position.copy().sub(this.transform.position).rotated(-this.transform.r);
+            var closestPoint = new Vector2D(Math.min(this.width/2, Math.max(-this.width/2, circleCenterRotated.x)), 
+                                             Math.min(this.height/2, Math.max(-this.height/2, circleCenterRotated.y)));
+            var distance = Vector2D.distance(circleCenterRotated, closestPoint);
+
+            return distance < collider.radius;
         } else if (collider instanceof BoxCollider2D) {
             return false; // TODO
         }
