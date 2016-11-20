@@ -79,8 +79,8 @@ class Animation extends EventInterface {
     update() {
         if (this.isPlaying) {
             var now = Date.now();
-            if (now - this.start >= this.frameSpeed) {
-                this.start = now;
+            if (now - this.startTime >= this.frameSpeed) {
+                this.startTime = now;
                 this._update();
             }
         }

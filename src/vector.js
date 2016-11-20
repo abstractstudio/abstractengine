@@ -30,8 +30,16 @@ class Vector2D {
     scale(f) { this.x *= f; this.y *= f; return this; }
     scaled(f) { return new Vector2D(this.x * f, this.y * f); }
     
-    normalize() { return this.scale(1/this.magnitude()); }
-    normalized() { return this.scaled(1/this.magnitude()); }
+    normalize() {
+        var mag = this.magnitude();
+        if (mag == 0) return this;
+        return this.scale(1/mag);
+    }
+    normalized() {
+        var mag = this.magnitude();
+        if (mag == 0) return new Vector2D(this.x, this.y);
+        return this.scaled(1/this.magnitude());
+    }
     
     copy() {
         return new Vector2D(this.x, this.y);
