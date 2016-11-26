@@ -18,7 +18,6 @@ class Engine extends EventInterface {
         this.game = null;
         this.assets = new AssetManager(this);
         this.input = new InputManager(this);
-        this.interface = new InterfaceManager(this);
         this.entities = new EntityManager(this);
         this.states = new StateManager(this);
         this.updateLimit = 60;

@@ -17,14 +17,18 @@ class InputManager extends EventInterface {
         this.engine = engine;
         this.engine.managers.input = this;
         this.canvas = engine.canvas;
+        this.canvas.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock || document.webkitExitPointerLock;
         this.canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
         this.canvas.exitPointerLock = document.exitPointerLock || document.mozExitPointerLock || document.webkitExitPointerLock;
-        
+        this.canvas.requestFullScreen = canvas.webkitRequestFullScreen || canvas.mozRequestFullScreen;
+
         this.mouse = {x: 0, y: 0};
         this.keyboard = {};
         this.captureMouseEnabled = false;
         this.preventReloadEnabled = false;  // For development purposes
-        
+        this.fullscreenEnabled = false;
+        this.fullpageEnabled = false;
+
         this._captured = false;
         this._capturing = false;
         
@@ -40,15 +44,15 @@ class InputManager extends EventInterface {
     }
     
     update() {
-        for (var key in this.keyboard) 
-            if (this.keyboard[key] == BUTTON.PRESSED)
+        for (let key in this.keyboard)
+            if (this.keyboard.hasOwnProperty(key) && this.keyboard[key] == BUTTON.PRESSED)
                 this.keyboard[key] = BUTTON.HELD;
-        for (var button in this.mouse)
-            if (this.mouse[button] == BUTTON.PRESSED)
+        for (let button in this.mouse)
+            if (this.mouse.hasOwnProperty(button) && this.mouse[button] == BUTTON.PRESSED)
                 this.mouse[button] = BUTTON.HELD;
     }
     
-    captureMouse() { 
+    captureMouse() {
         if (this._captured) return;
         this._capturing = true;
         this.canvas.requestPointerLock(); 
@@ -57,19 +61,27 @@ class InputManager extends EventInterface {
         console.log("capture");
     }
     
-    releaseMouse(alreadyReleased) { 
+    releaseMouse(alreadyReleased) {
         if (!this._captured) return;
         //this.canvas.exitPointerLock();  // done by browser
         this._captured = false;
         this.fireEvent("releasemouse");
         console.log("release");
     }
-    
+
+    enableFullscreen() {}
+
+    disableFullscreen() {}
+
+    enableFullpage() {}
+
+    disableFullpage() {}
+
     isCaptured() {
         return this._captured;
     }
     
-    onMouseDownLock(e) { 
+    onMouseDownLock(e) {
         if (!this.captureMouseEnabled) return;
         if (!this._captured) this.captureMouse(); 
     }
@@ -84,6 +96,10 @@ class InputManager extends EventInterface {
         this.fireEvent("attemptreload");
         return this.preventReloadEnabled || null;
     }
+
+    onResize(e) {
+
+    }
     
     onKeyDown(e) {
         if (this.keyboard[e.keyCode] === undefined) 
@@ -91,11 +107,11 @@ class InputManager extends EventInterface {
         if (IGNORE.hasOwnProperty(e.keyCode)) e.preventDefault();
     }
     
-    onKeyUp(e) { 
+    onKeyUp(e) {
         delete this.keyboard[e.keyCode]; 
     }
     
-    onMouseDown(e) { 
+    onMouseDown(e) {
         this.mouse[e.button] = BUTTON.PRESSED;
     }
     
@@ -108,8 +124,8 @@ class InputManager extends EventInterface {
             this.mouse.x += e.movementX || 0;
             this.mouse.y += e.movementY || 0;
         } else {
-            this.mouse.x = e.clientX - (this.engine.canvas ? this.engine.canvas.offsetLeft + document.body.scrollLeft : 0);
-            this.mouse.y = e.clientY - (this.engine.canvas ? this.engine.canvas.offsetTop + document.body.scrollTop : 0); 
+            this.mouse.x = e.clientX - this.canvas.offsetLeft + document.body.scrollLeft;
+            this.mouse.y = e.clientY - this.canvas.offsetTop + document.body.scrollTop;
         }
     }
 
