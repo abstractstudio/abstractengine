@@ -28,6 +28,9 @@ class InputManager extends EventInterface {
         this.preventReloadEnabled = false;  // For development purposes
         this.fullscreenEnabled = false;
         this.fullpageEnabled = false;
+        
+        this.originalCanvasWidth = 0;
+        this.originalCanvasHeight = 0;
 
         this._captured = false;
         this._capturing = false;
@@ -37,6 +40,8 @@ class InputManager extends EventInterface {
         document.addEventListener("mousedown", this.onMouseDown.bind(this));
         document.addEventListener("mouseup", this.onMouseUp.bind(this));  
         document.addEventListener("mousemove", this.onMouseMove.bind(this));
+        
+        window.addEventListener("resize", this.onResize.bind(this));
         
         this.canvas.addEventListener("mousedown", this.onMouseDownLock.bind(this), false);
         document.addEventListener("pointerlockchange", this.onPointerLockChange.bind(this), false);
@@ -69,13 +74,26 @@ class InputManager extends EventInterface {
         console.log("release");
     }
 
-    enableFullscreen() {}
+    enableFullpage() {
+        this.fullpageEnabled = true;
+        this.originalCanvasWidth = this.canvas.width;
+        this.originalCanvasHeight = this.canvas.height;
+        this.onResize();
+    }
 
-    disableFullscreen() {}
+    disableFullpage() {
+        this.fullpageEnabled = false;
+        this.canvas.width = this.originalCanvasWidth;
+        this.canvas.height = this.originalCanvasHeight;
+    }
 
-    enableFullpage() {}
+    enableFullscreen() {
+        
+    }
 
-    disableFullpage() {}
+    disableFullscreen() {
+    
+    }
 
     isCaptured() {
         return this._captured;
@@ -98,7 +116,9 @@ class InputManager extends EventInterface {
     }
 
     onResize(e) {
-
+        if (!this.fullpage) return;
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
     }
     
     onKeyDown(e) {
@@ -130,3 +150,4 @@ class InputManager extends EventInterface {
     }
 
 }
+ 
