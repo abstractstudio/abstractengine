@@ -1,7 +1,7 @@
 goog.require("engine.EventInterface");
 goog.require("engine.AssetManager");
 goog.require("engine.InputManager");
-goog.require("engine.InterfaceManager");
+//goog.require("engine.InterfaceManager");
 goog.require("engine.EntityManager");
 //goog.require("engine.ScriptManager");
 goog.provide("engine.Engine");
