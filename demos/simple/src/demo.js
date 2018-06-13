@@ -1,5 +1,5 @@
 /** simple.js */
-// Simple drawing demonstration with Transform2D
+// Simple drawing demonstration with Vector2D
 
 goog.require("engine.Engine2D");
 goog.require("engine.Vector2D");
