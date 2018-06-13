@@ -1,6 +1,6 @@
 targets:
   - entry: engine.Engine2D
-    output: demos/test/demo.min.js
+    output: demos/test/game.min.js
 source:
   - src/**.js
   - demos/test/src/**.js
