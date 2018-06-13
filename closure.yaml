@@ -1,7 +1,8 @@
 targets:
   - entry: engine.Engine2D
-    output: tests/engine2d.min.js
+    output: demos/test/demo.min.js
 source:
   - src/**.js
+  - demos/test/src/**.js
 arguments:
   --language_out: ES5
