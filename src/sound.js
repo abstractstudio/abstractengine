@@ -8,6 +8,7 @@ class AudioSource {
         this.isPlaying = false;
         this.isLooping = false;
         this.volume = 1;
+        this.playbackRate = 1;
     }
 
     play() {
@@ -23,11 +24,12 @@ class AudioSource {
         this.sound = c;
         this.sound.volume = this.volume;
         this.sound.loop = this.isLooping;
+        this.sound.playbackRate = this.playbackRate;
     }
     get clip(){ return this.sound; }
 }
 
-// Dictionary for storing sounds
+// Dictionary for storing audio sources
 class SoundManager {
     constructor(engine) {
         this.engine = engine;

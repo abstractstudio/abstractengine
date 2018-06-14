@@ -26,8 +26,10 @@ class AssetDemo extends Engine2D {
 			this.entities.get("sampleEntity").addRenderable("sampleImg", this.assets.get("sampleImg"));
 			this.entities.get("sampleEntity").setRenderable("sampleImg");
 
+			// Set audio settings and play
 			audioSource.volume = 0.1;
 			audioSource.isLooping = true;
+			audioSource.playbackRate = 1.5;
 			audioSource.clip = this.assets.get("sampleSound");
 			audioSource.play();
 		}
@@ -37,19 +39,18 @@ class AssetDemo extends Engine2D {
 			this.entities.get("sampleEntity").transform.rotation += 0.01;
 		}
 
-    render(context, canvas) {
-				// Render BG
-        context.fillStyle = "white";
-        context.fillRect(0, 0, this.canvas.width, this.canvas.height);
-        context.fillStyle = "black";
-        context.font = "20px Verdana";
-        context.textBaseline = "hanging";
+		render (context, canvas) {
+			// Render BG
+			context.fillStyle = "white";
+			context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-				// Render entity
-				this.entities.get("sampleEntity").render(context, canvas);
+			this.entities.get("sampleEntity").render(context, canvas);
 
-				// Render text
-				context.fillText("Asset Demo", 10, 10);
+			// Render text
+			context.fillStyle = "black";
+			context.font = "20px Verdana";
+			context.textBaseline = "hanging";
+			context.fillText("Asset Demo", 10, 10);
 		}
 
 }

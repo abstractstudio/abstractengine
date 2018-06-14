@@ -21,6 +21,7 @@ class Engine extends EventInterface {
         this.input = new InputManager(this);
         this.entities = new EntityManager(this);
         this.states = new StateManager(this);
+        this.sounds = new SoundManager(this);
         this.updateLimit = 60;
         this.updateInterval = 1000 / this.updateLimit;
         this.updateTime = 0;
@@ -92,6 +93,16 @@ class Engine2D extends Engine {
             this.renderTrackingIndex = 0;
     }
 
-    render(canvas, context) {}
+    render(context, canvas) {
+        // Render BG
+        context.fillStyle = "white";
+        context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // Render text
+        context.fillStyle = "black";
+        context.font = "20px Verdana";
+        context.textBaseline = "hanging";
+        context.fillText("Asset Demo", 10, 10);
+    }
 
 }

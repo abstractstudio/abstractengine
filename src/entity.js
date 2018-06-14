@@ -113,11 +113,12 @@ class Entity2D {
         this.transform = new Transform2D();
         this.renderables = {};
         this.renderable = null;
+        this.visible = true;
         this.collider = null;
     }
 
     addRenderable(name, asset) {
-      this.renderables[name] = asset;
+        this.renderables[name] = asset;
     }
 
     setRenderable(name) {
@@ -125,28 +126,28 @@ class Entity2D {
     }
 
     render(context, canvas) {
-      context.save();
-      context.translate(this.transform.position.x,
-                        this.transform.position.y);
-      context.rotate(this.transform.rotation);
-      context.translate(-this.transform.position.x - this.renderable.width*this.transform.anchor.x*this.transform.scale.x,
-                        -this.transform.position.y - this.renderable.width*this.transform.anchor.y*this.transform.scale.y);
-      if (this.renderable.type == IMAGE) {
-        context.drawImage(this.renderable,
-                          this.transform.position.x,
-                          this.transform.position.y,
-                          this.renderable.width * this.transform.scale.x,
-                          this.renderable.height * this.transform.scale.y);
-        context.restore();
-      }
-      else if (this.renderable.type == ANIMATION){
-        context.drawAnimation(this.renderable,
-                              this.transform.x,
-                              this.transform.y,
+        context.save();
+        context.translate(this.transform.position.x,
+                          this.transform.position.y);
+        context.rotate(this.transform.rotation);
+        context.translate(-this.transform.position.x - this.renderable.width*this.transform.anchor.x*this.transform.scale.x,
+                          -this.transform.position.y - this.renderable.width*this.transform.anchor.y*this.transform.scale.y);
+        if (this.renderable.type == IMAGE) {
+            context.drawImage(this.renderable,
+                              this.transform.position.x,
+                              this.transform.position.y,
                               this.renderable.width * this.transform.scale.x,
                               this.renderable.height * this.transform.scale.y);
+            context.restore();
+        }
+        else if (this.renderable.type == ANIMATION){
+            context.drawAnimation(this.renderable,
+                                  this.transform.x,
+                                  this.transform.y,
+                                  this.renderable.width * this.transform.scale.x,
+                                  this.renderable.height * this.transform.scale.y);
+        }
       }
-    }
 }
 
 class EntityManager {
