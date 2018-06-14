@@ -2,25 +2,34 @@
 // Asset usage demo
 
 goog.require("engine.Engine2D");
-goog.require("engine.Entity2D")
+goog.require("engine.Entity2D");
+goog.require("engine.AudioSource");
 
 class AssetDemo extends Engine2D {
 
 		setup() {
 			// Set up assets
 			this.assets.queue("sampleImg", IMAGE, "assets/abstract.png");
+			this.assets.queue("sampleSound", AUDIO, "assets/spinme_short.wav");
 
 			// Set up entities
 			var entity = new Entity2D();
 			entity.transform.position = new Vector2D(400, 300);
 			entity.transform.scale = new Vector2D(2, 2);
 			this.entities.add("sampleEntity", entity);
+
+			audioSource = new AudioSource();
 		}
 
 		load() {
 			// Load in assets and choose renderable for entity
 			this.entities.get("sampleEntity").addRenderable("sampleImg", this.assets.get("sampleImg"));
 			this.entities.get("sampleEntity").setRenderable("sampleImg");
+
+			audioSource.volume = 0.1;
+			audioSource.isLooping = true;
+			audioSource.clip = this.assets.get("sampleSound");
+			audioSource.play();
 		}
 
 		update(delta) {
