@@ -21,12 +21,12 @@ class Asset {
         this.status = CREATED;
         this.content = null;
     }
-    
+
     load(listener) {
         this.status = LOADING;
         var onload = () => { this.status = LOADED; listener(); }
         var onerror = () => { this.status = FAILED; listener(); }
-        
+
         if (this.type == IMAGE) {
             this.content = new Image();
             this.content.onload = onload;
@@ -43,19 +43,19 @@ class Asset {
             this.content.onerror = onerror;
             this.content.isRenderable = true;
         }
-        
+
         this.content.name = this.name;
         this.content.type = this.type;
         for (var key in this.options)
-            if (this.options.hasOwnProperty(key)) 
+            if (this.options.hasOwnProperty(key))
                 this.content[key] = this.options[key];
-        this.content.src = this.path;   
+        this.content.src = this.path;
     }
-    
+
 }
 
 class AssetManager extends EventInterface {
-    
+
     constructor(engine) {
         super();
         this.engine = engine;
@@ -64,11 +64,11 @@ class AssetManager extends EventInterface {
         this.map = {};
         this.status = CREATED;
     }
-    
+
     queue(name, type, path, options) {
-        this.jobs.push(new Asset(name, type, path, options));    
+        this.jobs.push(new Asset(name, type, path, options));
     }
-    
+
     load(listener) {
         var that = this;
         if (this.jobs.length == 0)
@@ -87,10 +87,10 @@ class AssetManager extends EventInterface {
             job.load(callback);
         }
     }
-    
+
     get(name) {
         if (name in this.map) return this.map[name].content;
-        return undefined;   
+        return undefined;
     }
-   
+
 }

@@ -1,4 +1,5 @@
-tests/demo.min.js
+# ignore min for now
+*.min.js
 
 #################
 ## Eclipse
