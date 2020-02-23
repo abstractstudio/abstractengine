@@ -1,8 +1,8 @@
 goog.require("engine.EventInterface");
-goog.provide("engine.Animation");
+goog.provide("engine.Animation2D");
 
 
-class Animation extends EventInterface {
+class Animation2D extends EventInterface {
 
     constructor() {
         super();
@@ -24,7 +24,7 @@ class Animation extends EventInterface {
     }
     
     copy() {
-        var a = new Animation();
+        var a = new Animation2D();
         for (var property in this)
             if (this.hasOwnProperty(property))
                 a[property] = this[property];

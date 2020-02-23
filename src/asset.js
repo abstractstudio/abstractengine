@@ -1,5 +1,5 @@
 goog.require("engine.EventInterface");
-goog.require("engine.Animation");
+goog.require("engine.Animation2D");
 goog.provide("engine.Asset");
 goog.provide("engine.AssetManager");
 
@@ -38,7 +38,7 @@ class Asset {
             this.content.onerror = onerror;
             this.content.isRenderable = false;
         } else if (this.type == ANIMATION) {
-            this.content = new Animation();
+            this.content = new Animation2D();
             this.content.onload = onload;
             this.content.onerror = onerror;
             this.content.isRenderable = true;
